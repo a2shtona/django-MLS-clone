@@ -26,8 +26,8 @@ from rest_framework.permissions import IsAuthenticated
 import datetime 
 from .adminapiserializers import *
 from accounts.paginatorviews import *
-from advertisment.models import *
-from advertisment.serializer import *
+from advertisement.models import *
+from advertisement.serializer import *
 from property.serializer import *
 
 def getuseprofile(request, search, usertype):

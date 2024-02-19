@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Advertisment',
+            name='Advertisement',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('Image', models.FileField(blank=True, null=True, upload_to='AdvertismentImage')),
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ('is_approved', models.BooleanField(blank=True, default=False, null=True)),
                 ('is_approved_date', models.DateField(blank=True, null=True)),
                 ('is_suspended', models.BooleanField(blank=True, default=False, null=True)),
-                ('AdvertismentUser_id', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='advertisment.advertismentuser')),
+                ('AdvertismentUser_id', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='advertisement.advertismentuser')),
             ],
         ),
     ]

@@ -24,7 +24,7 @@ class AdvertismentUser(models.Model):
     AdvertismentUser_id=models.CharField(max_length=300, null=True, blank=True, unique=True)
     is_active=models.BooleanField(null=True, blank=True, default=False)
 
-class Advertisment(models.Model):
+class Advertisement(models.Model):
     AdvertismentUser_id=models.ForeignKey(to=AdvertismentUser, on_delete=models.CASCADE, null=True, blank=True)
     Image=models.FileField(upload_to='AdvertismentImage', null=True, blank=True )
     description=models.TextField(null=True, blank=True)

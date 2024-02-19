@@ -53,7 +53,7 @@ urlpatterns = [
     path('',include('master.urls')),
     path('',include('master.masterurls')),
     path('',include('boostmarketing.urls')),
-    path('',include('advertisment.urls')),
+    path('',include('advertisement.urls')),
 
     path('boostmarket/',include(router.urls)),
 

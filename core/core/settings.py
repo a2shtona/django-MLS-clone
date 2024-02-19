@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'ckeditor',
     "corsheaders",
     "boostmarketing",
-    "advertisment",
+    "advertisement",
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_swagger',

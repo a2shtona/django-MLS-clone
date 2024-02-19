@@ -5,4 +5,4 @@ from .models import *
 
 # Register your models here.
 admin.site.register(AdvertismentUser)
-admin.site.register(Advertisment)
+admin.site.register(Advertisement)

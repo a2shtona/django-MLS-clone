@@ -14,7 +14,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from accounts.utils import Util
 from accounts.models import *
-from advertisment.models import *
+from advertisement.models import *
 from django.contrib import messages
 from .resource import *
 from tablib import Dataset

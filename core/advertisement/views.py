@@ -92,7 +92,6 @@ class AdvertismentUserView(APIView):
                 
 
 class AdvertismentLogin(APIView):
-    # key = '01234567890123456789015545678901'
     def post(self, request, format=None):
         try:
             data=request.data
@@ -102,8 +101,8 @@ class AdvertismentLogin(APIView):
                     advertiseobj=AdvertismentUser.objects.get(Business_Email=data["email"])
                     decrypted_password = decrypt(key, advertiseobj.password)
                     if decrypted_password == data['password']:
-                        SECRET_KEY = 'ce9e97b1d621850b3be436c2f4870c79df53561baec6cc70f1ee1ff498bd84d8'
-                        token=jwt.encode({data['email']:data['password']}, SECRET_KEY, algorithm="HS256")
+                        # SECRET_KEY = 'secret'
+                        token=jwt.encode({data['email']:data['password']}, "SECRET_KEY", algorithm="HS256")
                         # print(token)
                         serializer=AdvertismentRegistrationSerializer(advertiseobj)
                         # print(serializer.data)
@@ -135,9 +134,9 @@ class AdvertismentSave(APIView):
                     advertisment_end_date=request.POST.get('advertisment_end_date')
                     title=request.POST.get('title')
                     is_approved_date=request.POST.get('is_approved_date')
-                    obj=Advertisment.objects.create(AdvertismentUser_id=advertismentuserobj,Image=Image,description=description, advertisment_start_date=advertisment_start_date, advertisment_end_date=advertisment_end_date, title=title,is_approved_date=is_approved_date,date=date)
+                    obj=Advertisement.objects.create(AdvertismentUser_id=advertismentuserobj,Image=Image,description=description, advertisment_start_date=advertisment_start_date, advertisment_end_date=advertisment_end_date, title=title,is_approved_date=is_approved_date,date=date)
                     # print(obj)
-                    return Response(util.success(self, 'Advertisment Created successfully'))
+                    return Response(util.success(self, 'Advertisement Created successfully'))
             else:
                 return Response(util.error(self, 'AdvertismentUser_id not found'))
         except Exception as e:
@@ -146,8 +145,8 @@ class AdvertismentSave(APIView):
     def get(self, request, format=None, id=None):
         try:
             if id is not None:
-                if Advertisment.objects.filter(AdvertismentUser_id=id):
-                    advertismentobj=Advertisment.objects.filter(AdvertismentUser_id=id)
+                if Advertisement.objects.filter(AdvertismentUser_id=id):
+                    advertismentobj=Advertisement.objects.filter(AdvertismentUser_id=id)
                     # print(advertismentobj)
                     serializer=AdvertismentSerializer(advertismentobj, many=True)
                     # print(serializer.data)
@@ -157,7 +156,7 @@ class AdvertismentSave(APIView):
                         return Response(util.error(self,"No Data Found"))
                 
                 else:
-                    return Response(util.error(self, 'Advertisment id not found'))
+                    return Response(util.error(self, 'Advertisement id not found'))
             else:
                 return Response(util.error(self, 'id is required'))
         except Exception as e:

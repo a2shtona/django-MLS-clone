@@ -16,5 +16,5 @@ class AdvertismentRegistrationSerializer(serializers.ModelSerializer):
  
 class AdvertismentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Advertisment
+        model = Advertisement
         fields="__all__"
