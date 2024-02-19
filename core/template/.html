@@ -1,0 +1,220 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>User List</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>User
+							</p>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Profile</th>
+													<th>Name</th>
+													<th>Email</th>
+													<th>Phone</th>
+													<th>Account Type</th>
+													<th>Status</th>
+													<th>Join On</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												{% for item in userprofile %}
+												<tr>
+													{% if item.profile_image %}
+													<td><img class="vendor-thumb" src="{{item.profile_image.url}}" alt="user profile" /></td>
+													{% else %}
+													<td><img class="vendor-thumb" src="{% static 'assets/img/user/u1.jpg' %}" alt="user profile" /></td>
+													{% endif %}
+													<td>{{item.first_name}} {{item.last_name}}</td>
+													<td>{{item.user_type.user.username}}</td>
+													<td>{{item.work_number_1}} 
+														{% if item.work_number_2 %}
+														/ {{item.work_number_2}}
+														{% endif %}
+														{% if item.cell_number %}
+														/{{item.cell_number}}</td>
+														{% endif %}
+													{% if item.user_type.user_type == 0  %}
+													<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>
+													{% elif item.user_type.user_type == 1 %}
+													<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>
+													{% elif item.user_type.user_type == 2 %}
+													<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>
+													{% elif item.user_type.user_type == 3 %}
+													<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>
+													{% elif item.user_type.user_type == 4 %}
+													<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>
+													{% elif item.user_type.user_type == 5 %}
+													<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>
+													{% endif %}
+												
+													
+													{% if item.user_type.user.is_suspended %}
+														<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>
+													{% else %}
+														{% if item.user_type.user.is_active %}
+															<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>
+														{% else %}
+															<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>
+														{% endif %}
+									
+													{% endif %}
+													<td>{{item.user_type.user.date_joined}}</td>
+													
+													
+													{% if item.user_type.user.is_suspended %}
+													<td>
+														<div class="btn-group mb-1">
+															<button type="button"
+																class="btn btn-outline-success"><a href="{% url 'userprofile' item.id %}" style="color:rgb(73, 73, 73)">Info</a></button>
+															
+														</div>
+													</td>
+													{% else %}
+													<td>
+														<div class="btn-group mb-1">
+															<button type="button"
+																class="btn btn-outline-success"><a href="{% url 'userprofile' item.id %}" style="color:rgb(73, 73, 73)">Info</a></button>
+
+															<button type="button"
+																class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+																data-bs-toggle="dropdown" aria-haspopup="true"
+																aria-expanded="false" data-display="static">
+																<span class="sr-only">Info</span>
+															</button>
+
+															
+															<div class="dropdown-menu">
+														
+																{% if item.user_type.user.is_active %}
+																<a class="dropdown-item" href="{% url 'blockuser' item.user_type.user.id %}">Temporary Block</a>
+																{% else %}
+																<a class="dropdown-item" href="{% url 'unblockuser' item.user_type.user.id %}">UnBlock</a>
+																{% endif %}
+																<a class="dropdown-item" href="{% url 'suspenduser' item.user_type.user.id %}" onclick="return confirm('Do you Want To Suspend The User Permanently?')">Suspend</a>
+															</div>
+															
+														</div>
+													</td>
+													{% endif%}
+												
+												
+												</tr>
+												{% endfor %}
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form>
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New User</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										<div class="form-group row mb-6">
+											<label for="coverImage" class="col-sm-4 col-lg-2 col-form-label">User
+												Image</label>
+
+											<div class="col-sm-8 col-lg-10">
+												<div class="custom-file mb-1">
+													<input type="file" class="custom-file-input" id="coverImage"
+														required>
+													<label class="custom-file-label" for="coverImage">Choose
+														file...</label>
+													<div class="invalid-feedback">Example invalid custom file feedback
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row mb-2">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="firstName">First name</label>
+													<input type="text" class="form-control" id="firstName" value="John">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="lastName">Last name</label>
+													<input type="text" class="form-control" id="lastName" value="Deo">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="userName">User name</label>
+													<input type="text" class="form-control" id="userName"
+														value="johndoe">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="email">Email</label>
+													<input type="email" class="form-control" id="email"
+														value="johnexample@gmail.com">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="Birthday">Birthday</label>
+													<input type="text" class="form-control" id="Birthday"
+														value="10-12-1991">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="event">Address</label>
+													<input type="text" class="form-control" id="event"
+														value="Address here">
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="button" class="btn btn-primary btn-pill">Save Contact</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+{% endblock %}

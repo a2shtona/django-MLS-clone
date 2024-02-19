@@ -1,0 +1,190 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Subscription Services</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Position</th>
+													<th>Service Name</th>
+													<th>User</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												{% for item in serviceobj %}
+												<tr>
+													<td>{{item.position}}</td>
+													<td>{{item.service_name|wordwrap:50|linebreaksbr}}</td>
+													{% if item.usertype == 0 %}
+													<td>Admin</td>
+													{% elif item.usertype == 1 %}
+													<td>Guest</td>
+													{% elif item.usertype == 2  %}
+													<td>Agent</td>
+													{% elif item.usertype == 3 %}
+													<td>Investor/Developers</td>
+													{% elif item.usertype == 4 %}
+													<td>FSBHO</td>
+													{% elif item.usertype == 5 %}
+													<td>Management</td>
+													{% endif %}
+													<td>{{item.is_active}}</td>
+													<td>
+														<div class="btn-group mb-1">
+															<form action="">
+																<a style="color:rgb(73, 73, 73)" href="{% url 'editsubscriptionservices' item.id %}" type="button" class="btn btn-outline-success">Edit</a>
+														</form>
+														<div class="pl-3"></div>
+															<form action="{% url 'deletesubscriptionservices' item.id %}">
+																{% csrf_token %}
+																<input type="submit" class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73)"   value="delete" onclick="return confirm('Do you Want To Delete Permanently?')" >
+															</form>
+														</div>
+													</td>
+												
+												
+												</tr>
+												{% endfor %}
+
+											</tbody>
+										</table>
+										<nav aria-label="...">
+											<ul class="pagination">
+												{% if serviceobj.has_previous %}
+													<!-- <li class="page-item">
+														<a class="page-link" href="?page=1" >First</a>
+													</li> -->
+													<li class="page-item">
+														<a class="page-link" href="?page={{serviceobj.previous_page_number}}" ><<</a>
+													</li>
+												{% endif %}
+												<li class="page-item">
+													<a class="page-link" href="#">{{serviceobj.number}} <span class="sr-only">(current)</span></a>
+												</li>
+												{% if serviceobj.has_next %} 
+													<li class="page-item">
+														<a class="page-link" href="?page={{serviceobj.next_page_number}}">>></a>
+													</li>
+													<!-- <li class="page-item">
+														<a class="page-link" href="?page={{serviceobj.paginator.num_pages}}">Last</a>
+													</li> -->
+												{% endif %}
+										  	</ul>
+										</nav>
+										<!-- start paginator -->
+										<!-- <nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if serviceobj.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{serviceobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											 {% endfor %}
+
+											  {% if serviceobj.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{serviceobj.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+											</ul>
+										</nav> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'subscription-services'%}" method="post" enctype="multipart/form-data">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Subscription Services</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+											<div class="col-lg-12">
+												<div class="form-group">
+													<label for="firstName">User Type</label>
+													<select class="form-control" name="user_type" required>
+														<option value="0">Admin</option>
+														<option value="1">Guest</option>  
+														<option value="2">Agent</option>
+														<option value="3">Investor/Developers </option>
+														<option value="4">FSBHO</option>
+														<option value="5">Management</option>
+													</select>          
+												</div>
+											</div>
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Service Name</label>
+													<input type="text" class="form-control" placeholder="Service Name" name="servicename" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Position</label>
+													<input type="text" class="form-control" id="Position" placeholder="Position" name="position" required>
+												</div>
+											</div>
+											
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary btn-pill">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+
+{% endblock %}
+
+

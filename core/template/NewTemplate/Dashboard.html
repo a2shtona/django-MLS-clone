@@ -1,0 +1,452 @@
+{% extends "NewTemplate/base2.html"%}
+{% load static %}
+{% block content %}
+<style>
+    .numbered{
+        text-align: end;
+        color: black;
+        font-weight: 500;
+        font-size: 20px;
+    }
+    .card-color{
+        background-color: #88aaf3;
+        color: #282727;
+        border-radius: 6px;
+    }
+    .card-border{
+        border: none;
+    }
+    .vertical-line{
+        padding-right: 8px;
+        border-right: black solid 1px;
+        padding-bottom: 1px;
+        height: 30px;
+        margin-right: 0.5rem !important;
+    }
+    .right{
+        padding-bottom: 5px !important;
+    }
+    .headcolor{
+        background-color: #88aaf3;
+    }
+    .all-user-serach{
+        display: flex;
+        align-items: end;
+        justify-content: end;
+        margin-bottom: 5px;
+    }
+
+    .all-user-serach input{
+        font-size: 17px;
+        width: 18%;
+        border-radius: 5px;
+        border: 1px solid;
+        padding-inline: 8px;
+    }
+
+    .all-user-serach button{
+        border: 1px solid;
+        font-size: 17px;
+        padding-inline: 7px;
+        border-radius: 0px 5px 5px 0px;
+    }
+</style>
+<!-- CONTENT WRAPPER -->
+<div class="ec-content-wrapper">
+    <!-- Content -->
+    <div class="content">
+        <div class="breadcrumb-wrapper breadcrumb-contacts">
+            <div>
+                <h1>Alert Dashboard</h1>
+            </div>
+        </div>
+        <!-- Top Statistics -->
+        <div class="row">
+            <div class="col-xl-4 col-sm-4 p-b-15 lbl-card">
+                <div class="card card-mini dash-card card-1">
+                    <div class="card-body card-color">
+                        <h4 class="mb-1">Support Ticket</h4>
+                        <p class="numbered">{{suppoetobj}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-sm-4 p-b-15 lbl-card">
+                <div class="card card-mini dash-card card-2">
+                    <div class="card-body card-color">
+                        <h4 class="mb-1">Lisiting User</h4>
+                        <p class="numbered">{{agentsupportobj}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-sm-4 p-b-15 lbl-card">
+                <div class="card card-mini dash-card card-3">
+                    <div class="card-body card-color">
+                        <h4 class="mb-1">Guests</h4>
+                        <p class="numbered">{{guestsupportobj}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Top Statistics -->
+
+        <!-- list -->
+        <div class="card bg-white profile-content">
+            <div class="row">
+                <div class="col-lg-12 col-xl-12">
+                    <div class="profile-content-right profile-right-spacing py-5 user-profile-tab-content">
+                        <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border" id="myProfileTab" role="tablist">
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link active right" href="support-tab" data-bs-toggle="tab" data-bs-target="#support" role="tab" aria-controls="support" aria-selected="true">Support Ticket</a>
+                            </li>
+                            <hr>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="listing-tab" data-bs-toggle="tab" data-bs-target="#listing" role="tab" aria-controls="listing" aria-selected="true">Listing User</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="guest-tab" data-bs-toggle="tab" data-bs-target="#guest" role="tab" aria-controls="guest" aria-selected="true">Guest User</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content px-3 px-xl-5" id="myTabContent">
+                            <!-- Support Ticket -->
+                            <div class="tab-pane fade show active" id="support" role="tabpanel"
+                                aria-labelledby="support-tab">
+                                <div class="tab-pane-content mt-5">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="ec-vendor-list card card-default card-border">
+                                                <div class="card-body">
+                                                    <div class="all-user-serach input-group">
+                                                        <input type="text" id="search-input-st"  placeholder="Search...">
+                                                        <button id="search-btn-st" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table id="responsive-data-table" class="table">
+                                                            <thead class="headcolor">
+                                                                <tr>
+                                                                    <th>Ticket number</th>
+                                                                    <th>Email Address</th>
+                                                                    <th>Contact</th>
+                                                                    <th>User Type</th>
+                                                                    <th>Ticket Type</th>
+                                                                    <th>Message</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="all-support-list">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="pagination">
+                                                        <button id="previous-btn-st" class="btn btn-primary">Previous</button>
+                                                        &nbsp;
+                                                        <button id="next-btn-st" class="btn btn-primary">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Support Ticket -->
+                            
+                            <!-- Listing User -->
+                            <div class="tab-pane fade show" id="listing" role="tabpanel"
+                                aria-labelledby="listing-tab">
+                                <div class="tab-pane-content mt-5">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="ec-vendor-list card card-default card-border">
+                                                <div class="card-body">
+                                                    <div class="all-user-serach input-group">
+                                                        <input type="text" id="search-input-ast"  placeholder="Search...">
+                                                        <button id="search-btn-ast" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table id="responsive-data-table" class="table">
+                                                            <thead class="headcolor">
+                                                                <tr>
+                                                                    <th>Ticket number</th>
+                                                                    <th>Email Address</th>
+                                                                    <th>Contact</th>
+                                                                    <th>User Type</th>
+                                                                    <th>Ticket Type</th>
+                                                                    <th>Message</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="all-agent-list">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="pagination">
+                                                        <button id="previous-btn-ast" class="btn btn-primary">Previous</button>
+                                                        &nbsp;
+                                                        <button id="next-btn-ast" class="btn btn-primary">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Lisiting User -->
+
+                            <!-- Listing User -->
+                            <div class="tab-pane fade show" id="guest" role="tabpanel"
+                                aria-labelledby="guest-tab">
+                                <div class="tab-pane-content mt-5">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="ec-vendor-list card card-default card-border">
+                                                <div class="card-body">
+                                                    <div class="all-user-serach input-group">
+                                                        <input type="text" id="search-input-gst"  placeholder="Search...">
+                                                        <button id="search-btn-gst" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table id="responsive-data-table" class="table">
+                                                            <thead class="headcolor">
+                                                                <tr>
+                                                                    <th>Ticket number</th>
+                                                                    <th>Email Address</th>
+                                                                    <th>Contact</th>
+                                                                    <th>User Type</th>
+                                                                    <th>Ticket Type</th>
+                                                                    <th>Message</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="all-guest-list">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="pagination">
+                                                        <button id="previous-btn-gst" class="btn btn-primary">Previous</button>
+                                                        &nbsp;
+                                                        <button id="next-btn-gst" class="btn btn-primary">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Lisiting User -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end list -->
+
+    </div>
+    <!-- End Content -->
+</div>
+<!-- End Content Wrapper -->
+
+<!-- javascript code -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- All Support List -->
+<script>
+    $(document).ready(function(){
+        var page = 1;
+        loadData();
+        function loadData(searchQuery = ''){
+            $.ajax({
+                url: '/API_AllSupportList/',
+                type: 'GET',
+                data: {
+                    page: page,
+                    search: searchQuery,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var dataList = $('#all-support-list');
+                    dataList.empty();
+                    $.each(data.results, function(index, item){
+                        var row = $('<tr>');
+                        row.append('<td>' + item.ticket_no + '</td>'); //name
+                        row.append('<td>' + item.user.username + '</td>'); // email
+                        row.append('<td>' + "-" + '</td>'); // phone
+
+                        if(item.user.user_type == 2){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-primary">Agent</span></td>');
+                        } else if(item.user.user_type == 1){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-success">Guest</span></td>');
+                        }
+
+                        row.append('<td>' + item.issue_type + '</td>');
+                        row.append('<td>' + item.description + '</td>');
+                        row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ApproveSupportRequest/'+ item.id +'">Approve</a></li><li><a class="dropdown-item" href="/RejectSupportRequest/'+ item.id +'">Reject</a></li></ul></div></td>');
+                        //row.append('<td><a href="' + item.id + '"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                        
+                        dataList.append(row);
+                    });
+                    $('#previous-btn-st').prop('disabled', !data.has_previous);
+                    $('#next-btn-st').prop('disabled', !data.has_next);
+                }
+            });
+        }
+        // Handle previous page button click
+        $('#previous-btn-st').click(function() {
+            if (page > 1) {
+                page -= 1;
+                loadData();
+            }
+        });
+
+        // Handle next page button click
+        $('#next-btn-st').click(function() {
+            page += 1;
+            loadData();
+        });
+
+        // Handle search button click
+        $('#search-btn-st').click(function() {
+            var searchQuery = $('#search-input-st').val(); // Get the search query from the input field
+            page = 1; // Reset the page number to 1
+            loadData(searchQuery); // Load data with the new search query
+        });
+    });
+</script>
+<!-- End Support List -->
+
+<script>
+    $(document).ready(function(){
+        $('.nav-link').click(function(e) {
+            e.preventDefault();
+            var tabId = $(this).attr('data-bs-target');
+            if(tabId === '#listing'){
+                Agentlisting();
+            }
+            else if(tabId === '#guest'){
+                GuestListing();
+            }
+        })
+
+        function Agentlisting(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_AgentSupportList/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-agent-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.ticket_no + '</td>'); //name
+                            row.append('<td>' + item.user.username + '</td>'); // email
+                            row.append('<td>' + "-" + '</td>'); // phone
+
+                            if(item.user.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Agent</span></td>');
+                            } else if(item.user.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Guest</span></td>');
+                            }
+
+                            row.append('<td>' + item.issue_type + '</td>');
+                            row.append('<td>' + item.description + '</td>');
+                            //row.append('<td><a href="' + item.id + '"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ApproveSupportRequest/'+ item.id +'">Approve</a></li><li><a class="dropdown-item" href="/RejectSupportRequest/'+ item.id +'">Reject</a></li></ul></div></td>');
+
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-ast').prop('disabled', !data.has_previous);
+                        $('#next-btn-ast').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-ast').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-ast').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-ast').click(function() {
+                var searchQuery = $('#search-input-ast').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function GuestListing(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_GuestSupportList/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-guest-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.ticket_no + '</td>'); //name
+                            row.append('<td>' + item.user.username + '</td>'); // email
+                            row.append('<td>' + "-" + '</td>'); // phone
+
+                            if(item.user.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Agent</span></td>');
+                            } else if(item.user.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Guest</span></td>');
+                            }
+
+                            row.append('<td>' + item.issue_type + '</td>');
+                            row.append('<td>' + item.description + '</td>');
+                            //row.append('<td><a href="' + item.id + '"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ApproveSupportRequest/'+ item.id +'">Approve</a></li><li><a class="dropdown-item" href="/RejectSupportRequest/'+ item.id +'">Reject</a></li></ul></div></td>');
+
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-gst').prop('disabled', !data.has_previous);
+                        $('#next-btn-gst').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-gst').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-gst').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-gst').click(function() {
+                var searchQuery = $('#search-input-gst').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+    })
+</script>
+<!-- End Javascript Code -->
+{% endblock %}

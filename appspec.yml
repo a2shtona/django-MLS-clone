@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/BACKEND_MLS-tutor
+    overwrite: true
+file_exists_behavior: OVERWRITE
+hooks:
+  BeforeInstall:
+    - location: core/scripts/beforeinstall.sh
+  AfterInstall:
+    - location: core/scripts/deploycommands.sh

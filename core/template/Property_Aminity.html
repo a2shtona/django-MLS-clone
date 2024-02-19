@@ -1,0 +1,158 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Property Amenity</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Amenity Icon</th>
+													<th>Amenity Name</th>
+													<th>Position</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												{% for item in Amenities_Masterobj %}
+												<tr>
+													
+													{% if item.amenities_icon %}
+													<td><img class="vendor-thumb" src="{{item.amenities_icon.url}}" alt="user profile" /></td>
+													{% else %}
+													<td><img class="vendor-thumb" src="" alt="user profile" /></td>
+													{% endif %}
+													<td>{{item.amenities_name}}</td>
+													<td>{{item.position}}</td>
+													<td>{{item.is_active}}</td>
+													
+													<td>
+														<div class="btn-group mb-1">
+															<form >
+																<a style="color:rgb(73, 73, 73)" href="{% url 'propertyaminityedit' item.id %}"><button type="button" class="btn btn-outline-success" >Edit</button>	</a>
+														</form>
+														<div class="pl-3"></div>
+															<form action="{% url 'propertyaminitydelete' item.id %}">
+																<input type="submit" value="Delete" class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73)" onclick="return confirm('Do you Want To Delete Permanently?')">
+															</form>
+														</div>
+													</td>
+												
+												
+												</tr>
+												{% endfor %}
+
+											</tbody>
+										</table>
+										<!-- start paginator -->
+										<nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if Amenities_Masterobj.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{Amenities_Masterobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											  {% endfor %}
+
+											  {% if Amenities_Masterobj.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{Amenities_Masterobj.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+
+											</ul>
+										</nav>
+										<!-- end paginator -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'property-aminities'%}" method="post" enctype="multipart/form-data">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Amenity</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Amenity Icon</label>
+													<input type="file" class="form-control" placeholder="Aminity Icon" name="amenity" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Amenity Name</label>
+													<input type="text" class="form-control" id="listing-Position" name="amenities_name" required>
+												</div>
+											</div>
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Position</label>
+													<input type="number" class="form-control" id="listing_type" required placeholder="Amenity Type" name="position" >
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary btn-pill">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+
+
+{% endblock %}
+
+

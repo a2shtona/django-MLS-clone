@@ -1,0 +1,88 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+							<h1>Edit Area Master</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>Edit-Area-Master</p>
+						</div>
+						<div>
+							<a href="{% url 'areamasterview' %}" class="btn btn-primary"> View All
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Edit Area Master</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="row ec-vendor-uploads">
+										
+										<div class="col-lg-12">
+											<div class="ec-vendor-upload-detail">
+												<form class="row g-3" action="" method="POST">
+													{% csrf_token %}
+													
+													<div class="col-lg-6">
+														<div class="form-group">
+															<label for="position">Position</label>
+															<input type="number" class="form-control" id="" placeholder=" Position" name="position" placeholdername="Position" value="{{editareamasterobj.position}}" required>
+														</div>
+													</div>
+
+
+													<div class="col-md-6">
+														<label class="form-label">City Master</label>
+														<select name="city_master" id="Categories" class="form-select">
+															<option value="{{editareamasterobj.city_master.id}}">{{editareamasterobj.city_master.city_name}}</option>
+															{% for item in editcitymasterobj %}
+																{% if item.id is editareamasterobj.city_master.id %}
+
+																{% else %}
+																<option value="{{item.id}}">{{item.city_name}}</option>
+																{% endif %}
+															{% endfor %}
+															
+														</select>
+													</div>
+													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">Area Name</label>
+														<input type="text" name="area_name" class="form-control slug-title" id="inputEmail4" value="{{editareamasterobj.area_name}}">
+													</div>
+													<div class="col-md-6">
+														<label class="form-label">is Active</label>
+														<select name="is_active" id="Categories" class="form-select">
+																{% if editareamasterobj.is_active %}
+																<option value="1">Active</option>
+																<option value="0">Deactive</option>
+																{% else %}
+																<option value="0">Deactive</option>
+																<option value="1">Active</option>
+
+																{% endif %}
+														</select>
+													</div>
+
+
+
+													
+													<div class="col-md-12">
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+{% endblock %}

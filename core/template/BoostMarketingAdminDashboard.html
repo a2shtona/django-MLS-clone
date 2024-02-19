@@ -1,0 +1,180 @@
+{% extends "baseBoostmarkeing.html"%}{% load static %} {% block content %}
+<!-- CONTENT WRAPPER -->
+<div class="ec-content-wrapper">
+	<div class="content">
+		<!-- Top Statistics -->
+		<div class="row">
+			<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+				<div class="card card-mini dash-card card-1">
+					<div class="card-body">
+						<h2 class="mb-1">1,503<!-- -{{name}} --></h2>
+						<p>Daily Signups</p>
+						<span class="mdi mdi-account-arrow-left"></span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+				<div class="card card-mini dash-card card-2">
+					<div class="card-body">
+						<h2 class="mb-1">79,503</h2>
+						<p>Daily Visitors</p>
+						<span class="mdi mdi-account-clock"></span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+				<div class="card card-mini dash-card card-3">
+					<div class="card-body">
+						<h2 class="mb-1">15,503</h2>
+						<p>Daily Order</p>
+						<span class="mdi mdi-package-variant"></span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+				<div class="card card-mini dash-card card-4">
+					<div class="card-body">
+						<h2 class="mb-1">$98,503</h2>
+						<p>Daily Revenue</p>
+						<span class="mdi mdi-currency-usd"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<form action="{% url 'boostmarketingplantable' %}">
+			<div class="row">
+				<div class="col-lg-9">
+					<div class = "form group">
+						<select class="form-select form-control" name="plan_type" aria-label="Default select example">
+							{% for item in boostservice %}
+								{% if item.ServiceNumber == 1 %}
+									<option value="{{item.id}}">SMS MARKETING</option>
+								{% elif item.ServiceNumber == 2 %}
+									<option value="{{item.id}}">DISPLAY ADS</option>
+								{% elif item.ServiceNumber == 3 %}
+									<option value="{{item.id}}">NATIVE ADS</option>
+								{% elif item.ServiceNumber == 4 %}
+									<option value="{{item.id}}">STREAMING ADS</option>
+								{% elif item.ServiceNumber == 5 %}
+									<option value="{{item.id}}">SOCIAL MEDIA</option>
+								{% elif item.ServiceNumber == 6 %}
+									<option value="{{item.id}}">PODCAST ADS</option>
+								{% elif item.ServiceNumber == 7 %}
+									<option value="{{item.id}}">COMMERCIAL ADS</option>
+								{% elif item.ServiceNumber == 8 %}
+									<option value="{{item.id}}">REMARKETING</option>
+								{% elif item.ServiceNumber == 9 %}
+									<option value="{{item.id}}">digital billboard</option>
+								{% elif item.ServiceNumber == 10 %}
+									<option value="{{item.id}}">PAID MEDIA GOOGLE ADWORD</option>
+								{% else %}
+									<option value="{{item.id}}">other digital marketing service</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="col-lg-3">
+					<div class = "form group">
+						<button type="submit" class="btn btn-outline-success" style="color:rgb(15, 16, 15) ">Submit</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="row pt-5">
+			<div class="col-12">
+				<div class="ec-vendor-list card card-default">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="responsive-data-table" class="table">
+								<thead>
+									<tr>
+										<th>Full Name</th>
+										<th>Email</th>
+										<th>Service Name</th>
+										<th>Start Date</th>
+										<th>End Date</th>
+										<th>URL</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									{% for item in boosttable %}
+									<tr>
+										<td>{{item.user.first_name}} {{item.user.last_name}}</td>
+										<td>{{item.user.email}}</td>
+										{% if item.boostbarkitingplan.plan_type == 1 %}
+										<td>SMS MARKETING</td>
+										{% elif item.boostbarkitingplan.plan_type == 2 %}
+										<td>DISPLAY ADS</td>
+										{% elif item.boostbarkitingplan.plan_type == 3 %}
+										<td>NATIVE ADS</td>
+										{% elif item.boostbarkitingplan.plan_type == 4 %}
+										<td>STREAMING ADS</td>
+										{% elif item.boostbarkitingplan.plan_type == 5 %}
+										<td>SOCIAL MEDIA</td>
+										{% elif item.boostbarkitingplan.plan_type == 6 %}
+										<td>PODCAST ADS</td>
+										{% elif item.boostbarkitingplan.plan_type == 7 %}
+										<td>COMMERCIAL ADS</td>
+										{% elif item.boostbarkitingplan.plan_type == 8 %}
+										<td>REMARKETING</td>
+										{% elif item.boostbarkitingplan.plan_type == 9 %}
+										<td>digital billboard</td>
+										{% elif item.boostbarkitingplan.plan_type == 10 %}
+										<td>PAID MEDIA GOOGLE ADWORD</td>
+										{% else %}
+										<td>other digital marketing service</td>
+										{% endif %}
+										
+										<td>{{item.start_date}}</td>
+										<td>{{item.end_date}}</td>
+										<td>{{item.url}}</td>
+
+										<td>
+											<div class="btn-group mb-1">
+                                                <a href="" style="color:rgb(73, 73, 73)"> <button type="button" class="btn btn-outline-success btn-outline-success-oneside">Info</button></a>
+                                                <button type="button" class="btn btn-outline-success dropdown-toggle dropdown-toggle-split " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+														<span class="sr-only">Info</span>
+												</button>
+                                                <div class="dropdown-menu">
+                                                </div>
+                                            </div>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							<!-- start paginator -->
+							<nav aria-label="Page navigation example">
+								<ul class="pagination justify-content-center">
+
+								{% if boosttable.has_previous %}
+								  <li class="page-item ">
+									<a class="page-link" href="?page={{boosttable.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+								  </li>
+								{% endif %}
+
+								{% for i in obj %}
+								  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+								  {% endfor %}
+
+								{% if boosttable.has_next %}
+								  <li class="page-item">
+									<a class="page-link" href="?page={{boosttable.next_page_number}}">Next</a>
+								  </li>
+								{% endif %}
+
+								</ul>
+							</nav>
+							<!-- end paginator -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  -->
+	</div> <!-- End Content -->
+</div> <!-- End Content Wrapper -->
+{% endblock %}

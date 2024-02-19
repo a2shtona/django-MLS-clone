@@ -1,0 +1,333 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+	.form-check-input.selectall
+	{
+		width: 2rem;
+		height: 2rem;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Manage Coupon </h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-cat-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Coupon Name</th>
+													<th>Coupon Code</th>
+													<th>Account Type</th>
+													<th>Start Date</th>
+													<th>End Date</th>
+													<th>Number of User</th>
+													<th>Coupon For</th>
+													<th>User Type</th>
+													<th>Discount Type</th>
+													<th>Discount</th>
+													<th>Status</th>
+													<th>Action</th>
+
+												</tr>
+											</thead>
+
+											<tbody>
+												{% for item in couponandpromoviewobj %}
+												
+												<tr>
+													<td>{{item.name}}</td>
+													<td>{{item.couponcode}}</td>
+
+													<td>
+													<span class="ec-sub-cat-list">
+
+													<span class="ec-sub-cat-count" title="Total Sub Categories">{{item.account_type | length}}</span>
+													
+													{% for i in item.account_type %}
+													{% if i == "1" %}
+													<span class="ec-sub-cat-tag">Agent</span>
+													{% elif i == "2" %}
+													<span class="ec-sub-cat-tag">Investor/Developer</span>
+													{% elif i == "3" %}
+													<span class="ec-sub-cat-tag">FSBHO</span>
+													{% elif i == "4" %}
+													<span class="ec-sub-cat-tag">Management</span>
+													{% endif %}
+													{% endfor %}
+													</span>
+													</td>
+
+													<td>{{item.startdate}}</td>
+													<td>{{item.enddate}}</td>
+													<td>{{item.number_of_user}}</td>
+													{% if item.couponfor == 0 %}
+													<td>Subscription Plan</td>
+													{% else %}
+													<td>Advertisement</td>
+                                                    {% endif %}
+
+													{% if item.user_type == 0 %}
+													<td>New</td>
+													{% else %}
+													<td>All</td>
+													{% endif %}
+
+													{% if item.discount_type == 0 %}
+													<td>Monthly</td>
+													{% else %}
+													<td>Percentage</td>
+													{% endif %}
+
+													{% if item.discount_type == 0 %}
+													<td>{{item.discount}}Months</td>
+													{% else %}
+													<td>{{item.discount}}%	</td>
+													{% endif %}
+
+													{% if item.is_active %}
+													<td>Active</td>
+													{% else %}
+													<td>Deactive</td>
+													{% endif %}
+																										
+													<td>
+														<div class="btn-group mb-1">
+															<form>
+																<a style="color:rgb(73, 73, 73)" href="{% url 'couponandpromoedit' item.id %}" type="button" class="btn btn-outline-success">Edit</a>
+														</form>
+														<div class="pl-3"></div>
+														<form action="{% url 'couponandpromodelete' item.id %}">
+															{% csrf_token %}
+																<input type="submit" class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73)" value="Delete"  onclick="return confirm('Do you Want To Delete Permanently?')">
+															</form>
+														</div>
+													</td>
+												</tr>
+											   {% endfor %}
+											</tbody>
+										</table>
+
+										<!-- start paginator -->
+										<nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if couponandpromoviewobj.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{couponandpromoviewobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											  {% endfor %}
+
+											  {% if couponandpromoviewobj.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{couponandpromoviewobj.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+
+											</ul>
+										</nav>
+										<!-- end paginator -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+							<div class="modal-content">
+								<form action="" method="post">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Coupon</h5>
+									</div>
+
+									<div class="modal-body px-4">
+
+										<div class="row mb-2">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="position">Coupon Name</label>
+													<input type="text" class="form-control" id="" placeholder=" Coupon Name" name="coupon_name" placeholdername="coupon_name" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="country_code">Coupon Code</label>
+													<input type="text" class="form-control" id="" placeholder="Coupon Code" name="coupon_code" placeholdername="coupon_code" required>
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="country_name">Start Date</label>
+													<input type="date" class="form-control" id="start-date" placeholder="Start Date" name="start_date" placeholdername="start-date" required>
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="country_name">End Date</label>
+													<input type="date" class="form-control" id="end-date" placeholder="End Date" name="end_date" placeholdername="end-date" min="" required onchange="validateDateRange()">
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="country_name">Number of User</label>
+													<input type="number" class="form-control" id="number-valid" placeholder="Number of User" name="number_of_user" placeholdername="number-of-user" required min="0" onchange="validateNumber()">
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="firstName">Coupon For</label>
+													<select class="form-select form-control" name="coupon_for" aria-label="Default select example" required>
+														<option value="">Select...</option>
+															<option value="0">Subscription Plan</option>
+															<option value="1">Advertisement</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="firstName">User Type</label>
+													<select class="form-select form-control" name="user_type" aria-label="Default select example" required>
+														<option value="">Select...</option>
+															<option value="0">New</option>
+															<option value="1">All</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="firstName">Discount Type</label>
+													<select class="form-select form-control" name="discount_type" aria-label="Default select example" required>
+														<option value="">Select...</option>
+															<option value="0">Monthly</option>
+															<option value="1">Percent</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="country_name">Discount</label>
+													<input type="number" class="form-control" id="number-valid" placeholder="Discount" name="discount" placeholdername="discount" required min="0" onchange="validateNumber()">
+												</div>
+											</div>
+
+											
+											<div class="col-lg-4">
+												<div class="form-group">
+													<label for="firstName">Account Type</label>
+													<select class="form-select form-control" name="account_type" aria-label="Default select example" id="textBox" multiple>
+														
+															<option value="1">Agent</option>
+															<option value="2">Investor/Developer</option>
+															<option value="3">FSBHO</option>
+															<option value="4">Management</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-lg-1 ">
+												<div class="form-group ">
+													<label for="country_code">Select All</label>
+													<input class="form-check-input selectall" type="checkbox"  name="select_all" id="chkPassport" onclick="enableDisable(this.checked)">
+												</div>
+											</div>
+
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+
+<!--start for page reload  -->
+<script>
+	window.history.replaceState({}, document.title, "/" + "couponandpromoview");
+</script>
+<!--end for page reload  -->
+
+<!-- start checkbox disable  -->
+<script type="text/javascript">
+	function enableDisable(bEnable){
+
+        var data=document.getElementById("chkPassport");
+		if(data.checked == true)
+		{
+			document.getElementById("textBox").disabled=true;
+		}
+		else{
+			document.getElementById("textBox").disabled=false;
+		}
+		
+    }
+</script>
+<!-- end checkbox disable  -->
+<script>
+	function validateDateRange(){
+		const startDate = new Date(document.getElementById("start-date").value);
+		const endDateInput = document.getElementById("end-date");
+		const endDate = new Date(endDateInput.value);
+
+		if (endDate < startDate) {
+			endDateInput.setCustomValidity("End date cannot be before start date");
+		} else {
+			endDateInput.setCustomValidity("");
+		}
+		endDateInput.min = document.getElementById("start-date").value;
+		}
+</script>
+
+<script>
+	function validateNumber(){
+		const myNumberInput = document.getElementById("number-valid");
+		if (myNumberInput.value < 0) {
+			myNumberInput.setCustomValidity("End valid number");
+		}
+	}
+</script>
+
+{% endblock %}
+
+

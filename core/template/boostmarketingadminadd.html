@@ -1,0 +1,241 @@
+
+{% extends "base.html"%}{% load static %} {% block content %}
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+							<h1>Add BoostMarketing Admin</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>Add BoostMarketing Admin</p>
+						</div>
+						<div>
+							<a href="product-list.html" class="btn btn-primary"> View All
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Add Boostmarketing Admin</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="row ec-vendor-uploads">
+								<form action="{% url 'AddBoostmarketingAdmin' %}" method="POSt" enctype="multipart/form-data" class="row g-3">
+									{% csrf_token %}
+										<div class="col-lg-4">
+											<div class="ec-vendor-img-upload">
+												<div class="ec-vendor-main-img">
+													<div class="avatar-upload">
+														<div class="avatar-edit">
+															<input type='file' id="imageUpload" name="profile" class="ec-image-upload"
+																accept=".png, .jpg' %}, .jpeg" required />
+															<label for="imageUpload"><img
+																	src="{% static 'assets/img/icons/edit.svg' %}"
+																	class="svg_img header_svg" alt="edit" /></label>
+														</div>
+														<div class="avatar-preview ec-preview">
+															<div class="imagePreview ec-div-preview">
+																<img class="ec-image-preview"
+																	src="{% static 'assets/img/products/vender-upload-preview.jpg' %}"
+																	alt="edit" />
+															</div>
+														</div>
+													</div>
+													
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-8">
+											<div class="ec-vendor-upload-detail">
+												
+													<div class="col-md-12">
+														<label for="inputEmail4" class="form-label" >First Name</label>
+														<input type="text" class="form-control slug-title" name="first_name"required id="inputEmail4">
+													</div>
+													<div class="col-md-12">
+														<label for="inputEmail4" class="form-label">Last Name</label>
+														<input type="text" class="form-control slug-title" name="last_name"required id="inputEmail4">
+													</div>
+													<div class="col-md-12">
+														<label for="inputEmail4" class="form-label">Email</label>
+														<input type="email" class="form-control slug-title" name="email" requiredid="inputEmail4">
+													</div>
+													<div class="col-md-12">
+														<label for="inputEmail4" class="form-label">Password</label>
+														<input type="password" class="form-control slug-title" name="password" requiredid="inputEmail4">
+													</div>
+													<div class="col-md-12">
+														<label for="inputEmail4" class="form-label">Work Number</label>
+														<input type="text" class="form-control slug-title" name="work_number" required id="inputEmail4">
+													</div>
+													
+													<div class="col-md-12">
+														<label class="form-label" name="short_description">Sort Description</label>
+														<textarea class="form-control" rows="2" required></textarea>
+													</div>
+													
+													<div class=" mb-25">
+														<label class="form-label">Select Services</label>
+														<div class="form-checkbox-box">
+
+															
+															{% if 1 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="1">
+																<label>SMS Marketing</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="1">
+																<label>SMS Marketing</label>
+															</div>
+															{% endif %}
+
+															{% if 2 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="2">
+																<label>Display Ads</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="2">
+																<label>Display Ads</label>
+															</div>
+															{% endif %}
+
+															{% if 3 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="3">
+																<label>Native Ads</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="3">
+																<label>Native Ads</label>
+															</div>
+															{% endif %}
+
+
+															{% if 4 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="4">
+																<label>Streaming Ads</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="4">
+																<label>Streaming Ads</label>
+															</div>
+															{% endif %}
+
+															
+															{% if 5 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="5">
+																<label>Social Media</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="5">
+																<label>Social Media</label>
+															</div>
+															{% endif %}
+															
+
+															{% if 6 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="6">
+																<label>Podcast Ads</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="6">
+																<label>Podcast Ads</label>
+															</div>
+															{% endif %}
+
+
+															{% if 7 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="7">
+																<label>Commercial Ad</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="7">
+																<label>Commercial Ad</label>
+															</div>
+															{% endif %}
+															
+
+															{% if 8 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="8">
+																<label>Remarketing</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="8">
+																<label>Remarketing</label>
+															</div>
+															{% endif %}
+
+															{% if 9 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="9">
+																<label>Digital Billboard</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="9">
+																<label>Digital Billboard</label>
+															</div>
+															{% endif %}
+															
+															{% if 10 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="10">
+																<label>Paid Media Google Adward</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="10">
+																<label>Paid Media Google Adward</label>
+															</div>
+															{% endif %}
+
+															{% if 11 in boostmarketingobj %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox" disabled  name="select_service" value="111">
+																<label>Other Digital Marketing Services</label>
+															</div>
+															{% else %}
+															<div class="form-check form-check-inline">
+																<input type="checkbox"  name="select_service" value="11">
+																<label>Other Digital Marketing Services</label>
+															</div>
+															{% endif %}
+															
+														</div>
+													</div>
+													
+													<div class="col-md-12">
+														<input type="submit" class="btn btn-primary" value="Send Email">
+													</div>
+												
+											</div>
+										</div>
+								
+									</div>
+								</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+			{% endblock %}

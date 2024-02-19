@@ -1,0 +1,159 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Isuue Priority Type</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Sr.No</th>
+													<th>Priority</th>
+													<th>Position</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												{% if issuepriorityobj %}
+													{% for item in issuepriorityobj %}
+														<tr>
+															<td>{{forloop.counter}}</td>
+															<td>{{item.priority}}</td>
+															<td>{{item.position}}</td>
+															<td>
+																<div class="btn-group mb-1">
+																	<a data-bs-toggle="modal" data-bs-target="#editoffers" >
+																		<button style="color:rgb(73, 73, 73)" type="submit" class="btn btn-outline-success" onclick="Editissue('{{item.id}}','{{item.priority}}','{{item.position}}')">Edit</button>
+																	</a>
+																<div class="pl-3"></div>
+																	<a href="{% url 'issue_priority' item.id %}">
+																		<button type="submit" class="btn btn-outline-danger" style="color:rgb(73, 73, 73)"onclick="return confirm('Do you Want To Delete Permanently?')">Delete</button>
+																	</a>
+																</div>
+															</td>
+														</tr>
+													{% endfor %}
+												{% endif %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'issue_priority' %}" method="post" enctype="multipart/form-data">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Issue</h5>
+									</div>
+									<div class="modal-body px-4">
+										<div class="row mb-2">
+
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Priority</label>
+													<input type="text" class="form-control" placeholder="Priority Type" name="priority" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Position</label>
+													<input type="number" class="form-control" id="Position" placeholder="Position" name="position" required>
+												</div>
+											</div>
+											
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary btn-pill">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- End Add User Model -->
+
+					<!-- Edit User Modal  -->
+					<div class="modal fade modal-add-contact" id="editoffers" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="" id="updatepriority" method="post" enctype="multipart/form-data">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Update Offer</h5>
+									</div>
+									<div class="modal-body px-4">
+										<div class="row mb-2">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Priority</label>
+													<input type="text" class="form-control" placeholder="Priority Type" id="priorityname" name="priority" value="" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Position</label>
+													<input type="number" class="form-control" id="issueposition" placeholder="Position" name="position" value="" required>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary btn-pill">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- End Edit User Model -->
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+	<script>
+		function Editissue(id, prioritytype, position) {
+			document.getElementById('updatepriority').action = '/issue_priority/'+id;
+			document.getElementById('priorityname').value = prioritytype;
+			document.getElementById('issueposition').value = position;
+		}
+	</script>
+{% endblock %}
+
+

@@ -1,0 +1,81 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+							<h1>Edit Property Type</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>Edit-Property-Type</p>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Edit Property Type</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="row ec-vendor-uploads">
+										
+										<div class="col-lg-12">
+											<div class="ec-vendor-upload-detail">
+												<form class="row g-3" action="{% url 'editpropertytype' propertytypeobj.id %}" method="POST" enctype="multipart/form-data">
+													{% csrf_token %}
+													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">Property Type Name</label>
+														<input type="text" required name="propertytype_name" class="form-control slug-title" id="inputEmail4" value="{{propertytypeobj.proprty_type_name}}">
+													</div>
+													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">Property Type Image</label>
+														<input type="file"  name="property_type_image" class="form-control slug-title" id="inputEmail4">
+													</div>
+													<div class="col-md-6">
+														<label class="form-label">Sub Category</label>
+														<select name="subcategoryid" id="Categories" class="form-select" required>
+															
+															
+															<option value="{{propertytypeobj.property_sub_category.id}}">{{propertytypeobj.property_sub_category.property_sub_category_Name}}</option>
+															{% for item in propertysubcategoryobj %}
+																<option value="{{item.id}}">{{item.property_sub_category_Name}}</option>
+															{% endfor %}
+															
+														</select>
+													</div>
+													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">Position</label>
+														<input type="number"  name="position" class="form-control slug-title" id="inputEmail4" value="{{propertytypeobj.category_position}}">
+													</div>
+													<div class="col-md-6">
+														<label class="form-label">is Active</label>
+														<select name="is_active" id="Categories" class="form-select" >
+																{% if is_active.category_position %}
+																<option value="1">Active</option>
+																<option value="0">Deactive</option>
+																{% else %}
+																<option value="0">Deactive</option>
+																<option value="1">Active</option>
+																{% endif %}
+														</select>
+													</div>
+
+
+
+													
+													<div class="col-md-12">
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+{% endblock %}

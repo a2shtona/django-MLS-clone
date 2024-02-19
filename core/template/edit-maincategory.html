@@ -1,0 +1,83 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+							<h1>Edit Property Main Category</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>Edit-Property-Main-Category</p>
+						</div>
+						<div>
+							<a href="{% url 'propertymaincategory' %}" class="btn btn-primary"> View All
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Edit Property Main Category</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="row ec-vendor-uploads">
+										
+										<div class="col-lg-12">
+											<div class="ec-vendor-upload-detail">
+												<form class="row g-3" action="{% url 'editpropertymaincategory' propertymaincategoryobj.id %}" method="POST">
+													{% csrf_token %}
+													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">Main Category Name</label>
+														<input type="text" name="main_category_name" class="form-control slug-title" id="inputEmail4" value="{{propertymaincategoryobj.Main_category}}">
+													</div>
+													<div class="col-md-6">
+														<label class="form-label">Typr of Listing</label>
+														<select name="typeoflisting" id="Categories" class="form-select">
+															
+															{% for item in propertylistingobj %}
+																{% if item.type_of_listing is propertymaincategoryobj.listing_type.type_of_listing %}
+																<option value="{{item.id}}">{{item.listing_type}}</option>
+																{% else %}
+																<option value="{{item.id}}">{{item.listing_type}}</option>
+																{% endif %}
+															{% endfor %}
+															
+														</select>
+													</div>
+													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">Position</label>
+														<input type="number" name="position" class="form-control slug-title" id="inputEmail4" value="{{propertymaincategoryobj.category_position}}">
+													</div>
+													<div class="col-md-6">
+														<label class="form-label">is Active</label>
+														<select name="is_active" id="Categories" class="form-select">
+																{% if propertymaincategoryobj.category_position %}
+																<option value="1">Active</option>
+																<option value="0">Deactive</option>
+																{% else %}
+																<option value="0">Deactive</option>
+																<option value="1">Active</option>
+
+																{% endif %}
+														</select>
+													</div>
+
+
+
+													
+													<div class="col-md-12">
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+{% endblock %}

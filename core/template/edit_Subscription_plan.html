@@ -1,0 +1,270 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+
+
+			<!-- CONTENT WRAPPER -->
+			<form action="{% url 'subscription-plan-update' subscribeplanobjupdate.id %}" method="POST">
+				{% csrf_token %}
+				<div class="modal-header px-4">
+					<h5 class="modal-title" id="exampleModalCenterTitle">Add New</h5>
+				</div>
+				
+				<div class="modal-body px-4">
+					<div class="row mb-2">
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label for="firstName">User Type</label>
+								<!-- <select class="form-control" name="user_type" required>
+									<option value="0">Admin</option>
+									<option value="1">Guest</option>  
+									<option value="2">Agent</option>
+									<option value="3">Investor/Developers </option>
+									<option value="4">FSBHO</option>
+									<option value="5">Management</option>
+								</select>-->
+								{% if subscribeplanobjupdate.UserType is 0 %}
+								<input type="text" class="form-control" disabled value="Admin">
+								{% elif subscribeplanobjupdate.UserType is 1 %}
+								<input type="text" class="form-control" disabled value="Guest">
+								{% elif subscribeplanobjupdate.UserType is 2 %}
+								<input type="text" class="form-control" disabled value="Agent">
+								{% elif subscribeplanobjupdate.UserType is 3 %}
+								<input type="text" class="form-control" disabled value="Investor/Developers">
+								{% elif subscribeplanobjupdate.UserType is 4 %}
+								<input type="text" class="form-control" disabled value="FSBHO">
+								{% else %}
+								<input type="text" class="form-control" disabled value="Management">
+								{% endif %}
+							</div>
+						</div>
+						
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label for="lastName">Name</label>
+								<input type="text" class="form-control" disabled value="{{subscribeplanobjupdate.Name}}">
+							</div>
+						</div>
+						
+						<div class="col-lg-6">
+							<div class="form-group mb-4">
+								<label for="userName">Plan Type</label>
+								{% if subscribeplanobjupdate.plan_type in "Regular" %}
+								<input type="text" class="form-control" disabled value="Regular">
+								{% else %}
+								<input type="text" class="form-control" disabled value="Addon">
+								{% endif %}
+								<!-- <select class="form-control" name="plan_type" required>
+									<option value="Regular">Regular</option>
+									<option value="Addon">Addon</option>   
+								</select> -->
+							</div>
+						</div>
+						
+						<div class="col-lg-6">
+							<div class="form-group mb-4">
+								<label for="email">Monthly Price</label>
+								<input type="number" class="form-control" value="{{subscribeplanobjupdate.monthly_price}}" name="monthly_price" required>
+							</div>
+						</div>
+						
+						<div class="col-lg-6">
+							<div class="form-group mb-4">
+								<label for="Birthday">Yearly Price</label>
+								<input type="number" class="form-control" name="yearly_price" value="{{subscribeplanobjupdate.yearly_price}}" required>
+							</div>
+						</div>
+						
+						<div class="col-lg-6">
+							<div class="form-group mb-4">
+								<label for="event">Discount Type</label>
+								<select class="form-control" name="discount_type" required>
+									<option value="0">Monthly</option>
+									<option value="1">Percentage</option>   
+								</select>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="form-group mb-4">
+								<label for="event">Discount</label>
+								<input type="number" class="form-control" name="discount" value="{{subscribeplanobjupdate.discount}}" required>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="form-group mb-3">
+								<label for="event">Discount Minimun Seat</label>
+								<input type="number" disabled class="form-control" name="discountmininumseat" value="{{subscribeplanobjupdate.discountmininumseat}}" required>
+							</div>
+						</div>
+
+						<div class="col-lg-12">
+							<div class="form-group mb-3">
+								<label for="event">Title</label>
+								<input type="text"  class="form-control" name="titles" value="{{subscribeplanobjupdate.titles}}" required>
+							</div>
+						</div>
+						
+					</div>
+					<!-- <div class="col-lg-12 d-flex list-service">
+						<div class="form-group mb-3">
+							{% if propertytypeobj %}
+							<input type="checkbox" checked class="check-time" name="allow_listing" id="chkPassport" onclick="EnableDisableTextBox(this)">
+							{% else %}
+							<input type="checkbox" class="check-time" name="allow_listing" id="chkPassport" onclick="EnableDisableTextBox(this)">
+							{% endif %}
+							 <label>Allow Listing</label>
+						</div>
+					</div> -->
+
+					<div class="row">
+						<h6 class="mb-2">Type Of Property</h6>
+					<div  class="col-lg-6 d-flex list-service">
+						{% if propertytypeobj %}
+							{% for propertytypeobj in propertytypeobj %}
+							<div class="form-group ">
+								<input type="checkbox" checked class="check-time" name="property_type" value="{{propertytypeobj.id}}" id="{{propertytypeobj.property_listing_name}}" disabled="disabled" onclick="EnableDisableCommercialTextBox(this)" >
+								<label>{{propertytypeobj.property_listing_name}}</label>
+							</div>
+							{% endfor %}
+						{% else %}
+						{% endif %}
+						{% for propertytypeobj in propertytypeobj1 %}
+						<div class="form-group ">
+							<input type="checkbox" class="check-time" name="property_type" value="{{propertytypeobj.id}}" id="{{propertytypeobj.property_listing_name}}" disabled="disabled" onclick="EnableDisableCommercialTextBox(this)" >
+							<label>{{propertytypeobj.property_listing_name}}</label>
+						</div>
+						{% endfor %}
+						
+					</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label for="Birthday">Total Listing</label>
+							<input type="number" class="form-control" id="count" name="total_listing"  disabled="disabled" value="{{subscribeplanobjupdate.total_listing}}" required>
+						</div>
+					</div>
+					
+					<div class="row">
+						{% for propertylistingtypeobj in propertylistingtypeobj %}
+						<div class="col-lg-3">
+							<div class="form-group ">
+								<label for="Birthday">{{propertylistingtypeobj.listing_type}}</label>
+							</div>
+						</div>
+						{% endfor %}
+						{% for i in subscribeplanobjupdate.properlisting %}
+						<div class="col-lg-3">
+							<div class="form-group ">
+								<input type="number" disabled value="{{i}}" class="form-control" id="{{propertylistingtypeobj.listing_type}}" name="propertylistingobj">
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+					<div class="row">
+						{% if subscriptionservicesobj %}
+							{% for item in subscriptionservicesobj %}
+							<div class="col-lg-12">
+								<div class="form-group mb-4">
+									<input type="checkbox" class="check-time text-right" name="services" value="{{item.id}}" checked>
+									<label>{{item.service_name}}</label>
+								</div>
+							</div>
+							{% endfor %}
+						{% else %}
+						{% endif %}
+						{% for item in subscriptionservicesobj1 %}
+						<div class="col-lg-12">
+							<div class="form-group mb-4">
+								<input type="checkbox" class="check-time text-right" name="services" value="{{item.id}}">
+								<label>{{item.service_name}}</label>
+							</div>
+						</div>
+						{% endfor %}
+						
+					</div>
+				</div>
+				
+				<div class="modal-footer px-4">
+					<button type="button" class="btn btn-secondary btn-pill" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary btn-pill">Save</button>
+				</div>
+			</form>
+
+			<script type="text/javascript">//
+				function EnableDisableCommercialTextBox(chkPassport) {
+					var residential = document.getElementById("Residential");
+					var Sales = document.getElementById("Sale");
+					var Lease = document.getElementById("Leasing");
+					
+
+					console.log(residential)
+					console.log(chkPassport)
+
+					Sales.disabled = chkPassport.checked ? false : true;
+					if (!commercial.disabled) {
+						commercial.focus();
+					}
+
+					Lease.disabled = chkPassport.checked ? false : true;
+					if (!residential.disabled) {
+						residential.focus();
+					}
+
+					
+				}
+			</script>
+
+			<script type="text/javascript">
+				function EnableDisableTextBox(chkPassport) {
+					var commercial = document.getElementById("Commercial");
+					var residential = document.getElementById("Residential");
+					var count = document.getElementById("count");
+					
+
+					console.log(chkPassport)
+
+					commercial.disabled = chkPassport.checked ? false : true;
+					if (!commercial.disabled) {
+						commercial.focus();
+					}
+
+					residential.disabled = chkPassport.checked ? false : true;
+					if (!residential.disabled) {
+						residential.focus();
+					}
+
+					count.disabled = chkPassport.checked ? false : true;
+					if (!count.disabled) {
+						count.focus();
+					}
+				}
+			</script>
+
+			<script type="text/javascript">
+				function EnableDisableResidentialTextBox(chkPassport) {
+					var commercial = document.getElementById("Commercial");
+					var residential = document.getElementById("Residential");
+					var count = document.getElementById("count");
+					
+
+					console.log(chkPassport)
+
+					commercial.disabled = chkPassport.checked ? false : true;
+					if (!commercial.disabled) {
+						commercial.focus();
+					}
+
+					residential.disabled = chkPassport.checked ? false : true;
+					if (!residential.disabled) {
+						residential.focus();
+					}
+
+					count.disabled = chkPassport.checked ? false : true;
+					if (!count.disabled) {
+						count.focus();
+					}
+				}
+			</script>
+
+{% endblock %}
+			

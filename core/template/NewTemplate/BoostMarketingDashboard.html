@@ -1,0 +1,151 @@
+{% extends "NewTemplate/base2.html"%}
+{% load static %}
+{% block content %}
+<div class="ec-content-wrapper">
+    <div class="content">
+        <div class="breadcrumb-wrapper breadcrumb-contacts">
+            <div>
+                <h1>User Profile</h1>
+                <p class="breadcrumbs"><span><a href="{% url 'AdminDashboard' %}">Home</a></span>
+                    <span><i class="mdi mdi-chevron-right"></i></span>Profiles
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'BoosMarketingAddAdmin' %}">
+                    <button type="submit" class="btn btn-primary">Add Boost-Marketing Admin</button>
+                </a>
+            </div>
+        </div>
+        <!--  user-profile-tab-content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="ec-vendor-list card card-default">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="responsive-data-table" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Profile</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Account Type</th>
+                                        <th>Status</th>
+                                        <th>Join On</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for item in userprofile %}
+                                    <tr>
+                                        {% if item.profile_image %}
+                                        <td><img class="vendor-thumb" src="{{item.profile_image.url}}" alt="user profile" /></td>
+                                        {% else %}
+                                        <td><img class="vendor-thumb" src="{% static 'assets/img/user/u1.jpg' %}" alt="user profile" /></td>
+                                        {% endif %}
+                                        <td>{{item.first_name}} {{item.last_name}}</td>
+                                        <td>{{item.user_type.user.username}}</td>
+                                        <td>{{item.work_number_1}} {% if item.work_number_2 %} / {{item.work_number_2}} {% endif %} {% if item.cell_number %} /{{item.cell_number}}
+                                        </td>
+                                        {% endif %} {% if item.user_type.user_type == 0 %}
+                                        <td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>
+                                        {% elif item.user_type.user_type == 1 %}
+                                        <td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>
+                                        {% elif item.user_type.user_type == 2 %}
+                                        <td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>
+                                        {% elif item.user_type.user_type == 3 %}
+                                        <td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>
+                                        {% elif item.user_type.user_type == 4 %}
+                                        <td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>
+                                        {% elif item.user_type.user_type == 5 %}
+                                        <td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>  
+                                        {% elif item.user_type.user_type == 6 %}
+                                        <td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>
+                                        {% elif item.user_type.user_type == 7 %}
+                                        <td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>
+                                        {% endif %}
+                                        {% if item.user_type.user.is_suspended %}
+                                        <td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>
+                                        {% else %} {% if item.user_type.user.is_active %}
+                                        <td><span class="mb-2 mr-2 badge badge-success">Active</span></td>
+                                        {% else %}
+                                        <td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>
+                                        {% endif %} {% endif %}
+                                        <td>{{item.user_type.user.date_joined}}</td>
+
+
+                                        {% if item.user_type.user.is_suspended %}
+                                        <td>
+                                            <div class="btn-group mb-1 ">
+                                                <a href="{% url 'ProfileInDetails' item.id %}" style="color:rgb(73, 73, 73)" ><button type="button" class="btn btn-outline-success ">Info</button></a>
+
+                                            </div>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            <div class="btn-group mb-1">
+                                                <a href="{% url 'ProfileInDetails' item.id %}" style="color:rgb(73, 73, 73)"> <button type="button" class="btn btn-outline-success btn-outline-success-oneside">Info</button></a>
+
+                                                <button type="button" class="btn btn-outline-success dropdown-toggle dropdown-toggle-split " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+																<span class="sr-only">Info</span>
+															</button>
+
+
+                                                <div class="dropdown-menu">
+
+                                                   
+                                                    <form class="dropdown-item" action="{% url 'suspenduser' item.user_type.user.id %}" method="POST">
+                                                        {% csrf_token    %}
+                                                        <button type="submit" value="{{request.path}}" name="path" class="btn-block">Suspend</button>
+                                                    </form>
+                                                    <form class="dropdown-item" action="{% url 'DeleteBoostMarketingAdmin' item.user_type.user.id %}">
+                                                        {% csrf_token    %}
+                                                        <button type="submit" name="path" class="btn-block">Delete</button>
+                                                    </form>
+                                                    
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        {% endif%}
+
+
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <!-- start paginator -->
+								<nav aria-label="Page navigation example">
+									<ul class="pagination justify-content-center">
+
+										{% if userprofile.has_previous %}
+										<li class="page-item ">
+										<a class="page-link" href="?page={{userprofile.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+										</li>
+										{% endif %}
+
+										{% for i in obj %}
+										<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+										{% endfor %}
+
+										{% if userprofile.has_next %}
+										<li class="page-item">
+										<a class="page-link" href="?page={{userprofile.next_page_number}}">Next</a>
+										</li>
+										{% endif %}
+
+									</ul>
+								</nav>
+							<!-- end paginator -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

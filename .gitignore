@@ -1,0 +1,9 @@
+*.pyc
+*.sqlite3
+*.pyc
+*.sqlite3
+__pycache__/
+core/core/.env
+.venv/*
+/.idea
+/mediafiles/*

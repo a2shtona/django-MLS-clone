@@ -1,0 +1,102 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+							<h1>Edit City Master</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>Edit-City-Master</p>
+						</div>
+						<div>
+							
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Edit City Master</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="row ec-vendor-uploads">
+										
+										<div class="col-lg-12">
+											<div class="ec-vendor-upload-detail">
+												<form action="{% url 'editcitymaster' citymasterobj.id %}" method="post" enctype="multipart/form-data">
+													{% csrf_token %}
+													
+				
+													<div class="modal-body px-4">
+														
+				
+														<div class="row mb-2">
+															<div class="col-lg-6">
+																<div class="form-group">
+																	<label for="firstName">Select state</label>
+																	<select class="form-select form-control" name="state_id" aria-label="Default select example" required>
+																		<option value="{{citymasterobj.state_master.id}}">{{citymasterobj.state_master.state_name}}</option>
+																		
+																		{% for item in statemasterobj %}
+																			{% if citymasterobj.state_master.id is item.id %}
+																			
+																			{% else %}
+																			<option value="{{item.id}}">{{item.state_name}}</option>
+																			{% endif %}
+																		{% endfor %}
+																	  </select>
+																</div>
+															</div>
+															<div class="col-md-6">
+																<label for="inputEmail4" class="form-label">City Image</label>
+																<input type="file" name="city_image" class="form-control slug-title" id="inputEmail4">
+															</div>
+															<div class="col-lg-6">
+																<div class="form-group">
+																	<label for="listing_type">City Name</label>
+																	<input type="text" class="form-control" id="listing_type" placeholder="City Name" value="{{citymasterobj.city_name}}" name="city_name" placeholdername="main_category_name" required>
+																</div>
+															</div>
+				
+															<div class="col-lg-6">
+																<div class="form-group mb-4">
+																	<label for="listing-Position">Position</label>
+																	<input type="number" class="form-control" id="listing-Position" value="{{citymasterobj.position}}" name="position" required>
+																</div>
+															</div>
+
+															<div class="col-lg-6">
+																<div class="form-group">
+																	<label for="firstName">Active Status</label>
+																	<select class="form-select form-control" name="is_active" aria-label="Default select example" required>
+																			{% if citymasterobj.is_active %}
+																			<option value="1">Active</option>
+																			<option value="0">Deactive</option>
+																			{% else %}
+																			<option value="0">Deactive</option>
+																			<option value="1">Active</option>
+																			{% endif %}
+																	  </select>
+																</div>
+															</div>
+														</div>
+													</div>
+				
+													<div class="modal-footer px-4">
+														<button type="button" class="btn btn-secondary btn-pill"
+															data-bs-dismiss="modal">Cancel</button>
+														<button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+{% endblock %}

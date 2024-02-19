@@ -1,0 +1,209 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Language Master</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i>language-master</span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addcsv"> upload Csv
+							</button>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Language name</th>
+													<th>Position</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												{% for item in laguagemasterobj %}
+												<tr>
+													
+													<td>{{item.languages_name}}</td>
+													<td>{{item.position}}</td>
+
+													
+													<td>
+														<div class="btn-group mb-1">
+															<form>
+																<a style="color:rgb(73, 73, 73)" href="{% url 'editlanguagemaster' item.id %}" type="button" class="btn btn-outline-success">Edit</a>
+														</form>
+														<div class="pl-3"></div>
+														<form action="{% url 'deletelanguagemaster' item.id %}" method="POST">
+															{% csrf_token %}
+																<input type="submit" class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73)" value="Delete"  onclick="return confirm('Do you Want To Delete Permanently?')">
+															</form>
+														</div>
+													</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+
+										<!-- start paginator -->
+
+										<nav aria-label="...">
+											<ul class="pagination">
+												{% if laguagemasterobj.has_previous %}
+													<!-- <li class="page-item">
+														<a class="page-link" href="?page=1" >First</a>
+													</li> -->
+													<li class="page-item">
+														<a class="page-link" href="?page={{laguagemasterobj.previous_page_number}}" ><<</a>
+													</li>
+												{% endif %}
+												<li class="page-item">
+													<a class="page-link" href="#">{{laguagemasterobj.number}} <span class="sr-only">(current)</span></a>
+												</li>
+												{% if laguagemasterobj.has_next %} 
+													<li class="page-item">
+														<a class="page-link" href="?page={{laguagemasterobj.next_page_number}}">>></a>
+													</li>
+													<!-- <li class="page-item">
+														<a class="page-link" href="?page={{laguagemasterobj.paginator.num_pages}}">Last</a>
+													</li> -->
+												{% endif %}
+										  	</ul>
+										</nav>
+
+
+										<!-- <nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if laguagemasterobj.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{laguagemasterobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											  {% endfor %}
+
+											  {% if laguagemasterobj.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{laguagemasterobj.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+
+											</ul>
+										</nav> -->
+										<!-- end paginator -->
+
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<div class="modal fade modal-add-contact" id="addcsv" tabindex="-1" role="dialog" 
+					aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'Uploadlanguage'%}" method="post" enctype="multipart/form-data">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Agent License</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										<div class="row mb-2">
+											
+											<div class="col-lg-12">
+												<div class="form-group">
+													<label for="listing_type">Upload Csv</label>
+													<input type="file" class="form-control" id="listing_type" placeholder="Main Category Name" name="myfile" placeholdername="main_category_name" required accept=".xlsx">
+												</div>
+											</div>
+											
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'languagemaster'%}" method="post">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New State</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+											
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Language Name</label>
+													<input type="text" class="form-control" id="listing_type" placeholder="Language Name" name="language_name" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Position</label>
+													<input type="number" class="form-control" id="listing-Position" name="position" required>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+
+<!--start for page reload  -->
+<script>
+	window.history.replaceState({}, document.title, "/" + "languagemaster");
+</script>
+<!--end for page reload  -->
+	
+{% endblock %}
+
+

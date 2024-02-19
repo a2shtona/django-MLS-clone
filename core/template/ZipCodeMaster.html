@@ -1,0 +1,189 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>ZipCode Master</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Position</th>
+													<th>Area Master</th>
+													<th>Zip Code</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												{% for item in result_list %}
+												<tr>
+													<th>{{item.position}}</th>
+													<td>{{item.area_master.area_name}}</td>
+													<td>{{item.Zipcode}}</td>
+													
+													{% if item.is_active %}
+													<td>Active</td>
+													{% else %}
+													<td>Deactive</td>
+													{% endif %}
+													
+													<td>
+														<div class="btn-group mb-1">
+															<form>
+																<a style="color:rgb(73, 73, 73)" href="{% url 'editzipcodemaster' item.id %}" type="button" class="btn btn-outline-success">Edit</a>
+														</form>
+														<div class="pl-3"></div>
+														<form action="{% url 'zipcodemasterdelete' item.id %}" >
+															{% csrf_token %}
+																<input type="submit" class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73)" value="Delete"  onclick="return confirm('Do you Want To Delete Permanently?')">
+															</form>
+														</div>
+													</td>
+												</tr>
+											{% endfor %}
+											
+
+											</tbody>
+										</table>
+										<!-- start paginator -->
+										<nav aria-label="...">
+											<ul class="pagination">
+												{% if result_list.has_previous %}
+													<li class="page-item">
+														<a class="page-link" href="?page=1" >First</a>
+													</li>
+													<li class="page-item">
+														<a class="page-link" href="?page={{result_list.previous_page_number}}" ><<</a>
+													</li>
+												{% endif %}
+												<li class="page-item">
+													<a class="page-link" href="#">{{result_list.number}} <span class="sr-only">(current)</span></a>
+												</li>
+												{% if result_list.has_next %} 
+													<li class="page-item">
+														<a class="page-link" href="?page={{result_list.next_page_number}}">>></a>
+													</li>
+													<li class="page-item">
+														<a class="page-link" href="?page={{result_list.paginator.num_pages}}">Last</a>
+													</li>
+												{% endif %}
+										  	</ul>
+										</nav>
+										<!-- <nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if result_list.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{result_list.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											 {% endfor %}
+
+											  {% if result_list.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{result_list.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+											</ul>
+										</nav> -->
+										<!-- end paginator -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'zipcodemasterview' %}" method="post">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Area Master</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="position">Position</label>
+													<input type="number" class="form-control" id="" placeholder=" Position" name="position" placeholdername="Position" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="firstName">Area Master</label>
+													<select class="form-select form-control" name="area_master" aria-label="Default select example" >
+														{% for item in areamasterobj %}
+															<option value="{{item.id}}">{{item.area_name}} </option>
+														{% endfor %}
+													  </select>
+												</div>
+											</div>
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="area_name">Zip Code</label>
+													<input type="text" class="form-control" id="area_name" placeholder="zip code" name="zip_code" placeholdername="zip_code" required>
+												</div>
+											</div>
+
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+
+
+<!--start for page reload  -->
+<script>
+	window.history.replaceState({}, document.title, "/" + "zipcodemasterview");
+</script>
+<!--end for page reload  -->
+	
+{% endblock %}
+
+

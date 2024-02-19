@@ -1,0 +1,113 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+
+	.hide-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Boost Marketing Plan</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span><a href="{% url 'create_Boostmarketingplan' %}" class="text-decoration-none">Boost Marketing Plan</a>
+								<span><i class="mdi mdi-chevron-right"></i></span>Boost Marketing Plan Edit
+							</p>
+						</div>
+						<!-- <div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div> -->
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Edit Plan Type : 
+										{% if boostmarketingplan.plan_type == 1 %}
+										SMS MARKETING
+										{% elif boostmarketingplan.plan_type == 2 %}
+										DISPLAY ADS
+										{% elif boostmarketingplan.plan_type == 3 %}
+										NATIVE ADS
+										{% elif boostmarketingplan.plan_type == 4 %}
+										STREAMING ADS
+										{% elif boostmarketingplan.plan_type == 5 %}
+										SOCIAL MEDIA
+										{% elif boostmarketingplan.plan_type == 6 %}
+										PODCAST ADS
+										{% elif boostmarketingplan.plan_type == 7 %}
+										COMMERCIAL ADS
+										{% elif boostmarketingplan.plan_type == 8 %}
+										REMARKETING
+										{% elif boostmarketingplan.plan_type == 9 %}
+										digital billboard
+										{% elif boostmarketingplan.plan_type == 10 %}
+										PAID MEDIA GOOGLE ADWORD
+										{% else %}
+										other digital marketing service
+										{% endif %}
+									</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="row ec-vendor-uploads">
+										
+										<div class="col-lg-12">
+											<div class="ec-vendor-upload-detail">
+												<form class="row g-3" action="{% url 'Update_Boostmarketingplan' boostmarketingplan.id %}" method="POST">
+													{% csrf_token %}
+													<div class="col-lg-6">
+														<div class="form-group">
+															<label for="position">Impression</label>
+															<input type="text" class="form-control" placeholder="Impression" name="impression" value="{{boostmarketingplan.impression}}" required>
+														</div>
+													</div>
+													<div class="col-lg-6">
+														<div class="form-group">
+															<label for="position">Cost</label>
+															<input type="text" class="form-control" placeholder="Cost" name="cost" value="{{boostmarketingplan.cost}}">
+														</div>
+													</div>
+													<div class="col-lg-{% if boostmarketingplan.termsandservices %}6{% else %}12{% endif %}">
+														<div class="form-group">
+															<label for="position">Description</label>
+															<textarea class="form-control hide-scrollbar" placeholder="Description" name="description" required >{{boostmarketingplan.description}}</textarea>
+														</div>
+													</div>
+													{% if boostmarketingplan.termsandservices %}
+													<div class="col-lg-6">
+														<div class="form-group">
+															<label for="position">Terms and Services</label>
+															<textarea class="form-control hide-scrollbar" placeholder="Termandservices" name="termandservice" value="" required>{{boostmarketingplan.termsandservices}}</textarea>
+														</div>
+													</div>
+													{% endif %}
+													<div class="col-md-12">
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!--start for page reload  -->
+<script>
+	window.history.replaceState({}, document.title, "/" + "Update_Boostmarketingplan"+"/"+boostmarketingplan.id);
+</script>
+<!--end for page reload  -->			
+{% endblock %}

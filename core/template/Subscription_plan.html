@@ -1,0 +1,365 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+
+
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts d-flex justify-content-end">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnew"> Add New</button>
+					</div>
+					<!-- <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts d-flex justify-content-end">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnew"> Add New</button>
+					</div> -->
+					<div class="row">
+						<div class="col-xl-12 col-lg-12">
+							<div class="ec-cat-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Listing Type</th>
+													<th>Name</th>
+													<th>User Type</th>
+													<th>Plan Type</th>
+													<th>Monthly Price</th>
+													<th>Yearly Price</th>
+													<th>Discount Type</th>
+													<th>Discount</th>
+													<th>Discount mininum seat</th>
+													<th>Subscription Services</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												{% for item in subscriptionplanobj%}
+												<tr>
+													{% if item.listing_type == 0 %}
+														<td>Residential</td>
+													{% elif item.listing_type == 1 %}
+														<td>Commercial</td>
+													{% else %}
+														<td>Both</td>
+													{% endif %}
+
+													<td>{{item.Name}}</td>
+													{% if item.UserType == 0 %}
+													<td>Admin</td>
+													{% elif item.UserType == 1 %}
+													<td>Guest</td>
+													{% elif item.UserType == 2  %}
+													<td>Agent</td>
+													{% elif item.UserType == 3 %}
+													<td>Investor/Developers</td>
+													{% elif item.UserType == 4 %}
+													<td>FSBHO</td>
+													{% elif item.UserType == 5 %}
+													<td>Management</td>
+													{% endif %}
+
+													<td>{{item.plan_type}}</td>
+													<td>{{item.monthly_price}}</td>
+													<td>{{item.yearly_price}}</td>
+													
+													{% if item.discounttype == 0 %}
+													<td>Monthly</td>
+													{% else %}
+													<td>Percentage</td>
+													{% endif %}
+
+													{% if item.discounttype == 0 %}
+													<td>{{item.discount}} Months</td>
+													{% else %}
+													<td>{{item.discount}}%	</td>
+													{% endif %}
+
+													<td>{{item.discountmininumseat}}</td>
+													<td>
+														<span class="ec-sub-cat-list">
+														<span class="ec-sub-cat-count" title="Total Sub Categories">{{item.subscriptionservices | length}}</span>
+														
+														{% for i in item.list_of_subscription_service %}
+															<span class="ec-sub-cat-tag">{{i.service_name}}</span>
+														{% endfor %}
+														
+														</span>
+													</td>
+													
+													{% if item.is_active %}
+													<td><span class="badge badge-success">Active</span></td>
+													{% else %}
+													<td><span class="badge badge-danger">Active</span></td>
+													{% endif %}
+													<td>
+														<div class="btn-group">
+															<button type="button"
+																class="btn btn-outline-success">Info</button>
+															<button type="button"
+																class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+																data-bs-toggle="dropdown" aria-haspopup="true"
+																aria-expanded="false" data-display="static">
+																<span class="sr-only">Info</span>
+															</button>
+
+															<div class="dropdown-menu">
+																<a class="dropdown-item" href="{% url 'subscription-plan-update' item.id %}">Edit</a>
+																<!-- <a class="dropdown-item" href="{% url 'subscription-plan' item.id %}">Delete</a> -->
+															</div>
+														</div>
+													</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+
+										<!-- start paginator -->
+										<nav aria-label="...">
+											<ul class="pagination">
+												{% if subscriptionplanobj.has_previous %}
+													<!-- <li class="page-item">
+														<a class="page-link" href="?page=1" >First</a>
+													</li> -->
+													<li class="page-item">
+														<a class="page-link" href="?page={{subscriptionplanobj.previous_page_number}}" ><<</a>
+													</li>
+												{% endif %}
+												<li class="page-item">
+													<a class="page-link" href="#">{{subscriptionplanobj.number}} <span class="sr-only">(current)</span></a>
+												</li>
+												{% if subscriptionplanobj.has_next %} 
+													<li class="page-item">
+														<a class="page-link" href="?page={{subscriptionplanobj.next_page_number}}">>></a>
+													</li>
+													<!-- <li class="page-item">
+														<a class="page-link" href="?page={{subscriptionplanobj.paginator.num_pages}}">Last</a>
+													</li> -->
+												{% endif %}
+											</ul>
+										</nav>
+										<!-- end paginator -->
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+			<div class="modal fade modal-add-contact" id="addnew" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<form action="{% url 'subscription-plan' %}" method="POST">
+							{% csrf_token %}
+							<div class="modal-header px-4">
+								<h5 class="modal-title" id="exampleModalCenterTitle">Add New</h5>
+							</div>
+							
+							<div class="modal-body px-4">
+								
+								
+								<div class="row mb-2">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label for="firstName">User Type</label>
+											<select class="form-control" name="user_type" required>
+												<option value="0">Admin</option>
+												<option value="1">Guest</option>  
+												<option value="2">Agent</option>
+												<option value="3">Investor/Developers </option>
+												<option value="4">FSBHO</option>
+												<option value="5">Management</option>
+											</select>          
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label for="lastName">Name</label>
+											<input type="text" class="form-control" name="name" required>
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+										<div class="form-group mb-4">
+											<label for="userName">Plan Type</label>
+											<select class="form-control" name="plan_type" required>
+												<option value="Regular">Regular</option>
+												<option value="Addon">Addon</option>   
+											</select>
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+										<div class="form-group mb-4">
+											<label for="email">Monthly Price</label>
+											<input type="number" class="form-control" name="monthly_price" required>
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+										<div class="form-group mb-4">
+											<label for="Birthday">Yearly Price</label>
+											<input type="number" class="form-control" name="yearly_price" required>
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+										<div class="form-group mb-4">
+											<label for="event">Discount Type</label>
+											<select class="form-control" name="discount_type" required>
+												<option value="0">Monthly</option>
+												<option value="1">Percentage</option>   
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group mb-4">
+											<label for="event">Discount</label>
+											<input type="number" class="form-control" name="discount" required>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group mb-3">
+											<label for="event">Discount Minimun Seat</label>
+											<input type="number" class="form-control" name="discountmininumseat" required>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="form-group ">
+											<label for="event">Title</label>
+											<input type="text" class="form-control"  name="titles" maxlength = "225" >
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="form-group mb-4">
+											<label for="event">Listing Type</label>
+											<select class="form-control" name="listingtype">
+												<option value="">-</option>
+												<option value="0">Residential</option>
+												<option value="1">Commercial</option>
+												<option value="2">Both</option>   
+											</select>
+										</div>
+									</div>
+									
+								</div>
+								<div class="col-lg-12 d-flex list-service">
+									<div class="form-group mb-3">
+										<input type="checkbox" class="check-time" name="allow_listing" id="chkPassport" onclick="EnableDisableTextBox(this)">
+										<label>Allow Listing</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<h6 class="mb-2">Type Of Property</h6>
+								<div  class="col-lg-6 d-flex list-service">
+									{% for propertytypeobj in propertytypeobj %}
+									<div class="form-group ">
+										<input type="checkbox" class="check-time" name="property_type" value="{{propertytypeobj.id}}" id="{{propertytypeobj.property_listing_name}}" disabled="disabled" onclick="EnableDisableCommercialTextBox(this)" >
+										<label>{{propertytypeobj.property_listing_name}}</label>
+									</div>
+									{% endfor %}
+								</div>
+								</div>
+								<div class="col-lg-12">
+									<div class="form-group ">
+										<label for="Birthday">Total Listing</label>
+										<input type="number" class="form-control" id="count" name="total_listing"  disabled="disabled" required>
+									</div>
+								</div>
+								
+								<div class="row">
+									{% for propertylistingtypeobj in propertylistingtypeobj %}
+									<div class="col-lg-3">
+										<div class="form-group ">
+											<label for="Birthday">{{propertylistingtypeobj.listing_type}}</label>
+											<input type="number" class="form-control" id="{{propertylistingtypeobj.listing_type}}" disabled="disabled" name="propertylistingobj">
+										</div>
+									</div>
+									{% endfor %}
+								</div>
+								<div class="row">
+									{% for item in subscriptionservicesobj %}
+									<div class="col-lg-12">
+										<div class="form-group mb-4">
+											<input type="checkbox" class="check-time text-right" name="services" value="{{item.id}}" >
+											<label>{{item.service_name}}</label>
+										</div>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							
+							<div class="modal-footer px-4">
+								<button type="button" class="btn btn-secondary btn-pill" data-bs-dismiss="modal">Cancel</button>
+								<button type="submit" class="btn btn-primary btn-pill">Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Start Allow listing JS -->
+			<script type="text/javascript">
+				function EnableDisableTextBox(chkPassport) {
+					var commercial = document.getElementById("Commercial");
+					var residential = document.getElementById("Residential");
+					var count = document.getElementById("count");
+					
+					console.log(chkPassport)
+
+					commercial.disabled = chkPassport.checked ? false : true;
+					if (!commercial.disabled) {
+						commercial.focus();
+					}
+
+					residential.disabled = chkPassport.checked ? false : true;
+					if (!residential.disabled) {
+						residential.focus();
+					}
+					count.disabled = chkPassport.checked ? false : true;
+					if (!count.disabled) {
+						count.focus();
+					}
+				}
+			</script>
+			<!-- End Allow listing JS -->
+
+			<script type="text/javascript">//
+				function EnableDisableCommercialTextBox(chkPassport) {
+					var rental = document.getElementById("Rental")
+					var sales = document.getElementById("Sales")
+					var leasing = document.getElementById("Commercial Leasing")
+					var comercial_sales = document.getElementById("Commercial Sales")
+					if (chkPassport.id=="Residential"){
+						rental.disabled = chkPassport.checked ? false : true;
+						if (!rental.disabled) {
+							rental.focus();
+						}
+
+						sales.disabled = chkPassport.checked ? false : true;
+						if (!sales.disabled) {
+							sales.focus();
+						}
+					} else if (chkPassport.id=="Commercial"){
+						leasing.disabled = chkPassport.checked ? false : true;
+						if (!leasing.disabled) {
+							leasing.focus();
+						}
+
+						comercial_sales.disabled = chkPassport.checked ? false : true;
+						if (!comercial_sales.disabled) {
+							comercial_sales.focus();
+						}
+					}
+				}
+			</script>
+
+{% endblock %}
+			

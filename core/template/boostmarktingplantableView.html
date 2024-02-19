@@ -1,0 +1,317 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Boost Marketing Plan</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>type-of-listing
+							</p>
+						</div>
+						<div>
+							<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button> -->
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Full Name</th>
+													<th>Email</th>
+													<th>Plan Type</th>
+													<th>Start Date</th>
+													<th>End Date</th>
+													<th>URL</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												
+												{% for item in boostmarketing %}
+												<tr>
+													<td>{{item.user.first_name}} {{item.user.last_name}}</td>
+													<td><a href="{% url 'userprofile' item.user.id %}">{{item.user.email}}</a></td>
+													{% if item.boostbarkitingplan.plan_type == 1 %}
+													<td>SMS MARKETING</td>
+													{% elif item.boostbarkitingplan.plan_type == 2 %}
+													<td>DISPLAY ADS</td>
+													{% elif item.boostbarkitingplan.plan_type == 3 %}
+													<td>NATIVE ADS</td>
+													{% elif item.boostbarkitingplan.plan_type == 4 %}
+													<td>STREAMING ADS</td>
+													{% elif item.boostbarkitingplan.plan_type == 5 %}
+													<td>SOCIAL MEDIA</td>
+													{% elif item.boostbarkitingplan.plan_type == 6 %}
+													<td>PODCAST ADS</td>
+													{% elif item.boostbarkitingplan.plan_type == 7 %}
+													<td>COMMERCIAL ADS</td>
+													{% elif item.boostbarkitingplan.plan_type == 8 %}
+													<td>REMARKETING</td>
+													{% elif item.boostbarkitingplan.plan_type == 9 %}
+													<td>digital billboard</td>
+													{% elif item.boostbarkitingplan.plan_type == 10 %}
+													<td>PAID MEDIA GOOGLE ADWORD</td>
+													{% else %}
+													<td>other digital marketing service</td>
+													{% endif %}
+													
+													<td>{{item.start_date}}</td>
+													<td>{{item.end_date}}</td>
+													<td>{{item.url}}</td>
+
+													<td>
+														<!-- <div class="btn-group mb-1">
+															<a href="{% url 'detailboostmarketingplan' item.id %}" style="color:rgb(73, 73, 73)" ><button type="button" class="btn btn-outline-success ">Info</button></a>
+														</div> -->
+														<!-- <div class="btn-group mb-1">
+															<form>
+																<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#edit" onclick="edittypeoflisting('{{item.id}}','{{item.plan_type}}','{{item.impression}}','{{item.cost}}','{{item.description}}')"> Edit </button>
+															</form>
+														<div class="pl-3"></div>
+															<form>
+																<input type="button"  class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73) " data-bs-toggle="modal" data-bs-target="#delete" value="Delete"  onclick="deletetypeoflisting('{{item.id}}')">
+															</form>
+														</div> -->
+													</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+										<!-- start paginator -->
+										<nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if boostmarketing.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{boostmarketing.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											  {% endfor %}
+
+											  {% if boostmarketing.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{boostmarketing.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+
+											</ul>
+										</nav>
+										<!-- end paginator -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<!-- <div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'create_Boostmarketingplan'%}" method="post">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Boost Marketing Plan</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="firstName">Plan Type</label>
+													<select class="form-select form-control" name="plan_type" aria-label="Default select example">
+														<option value="1">SMS MARKETING</option>
+														<option value="2">DISPLAY ADS</option>
+														<option value="3">NATIVE ADS</option>
+														<option value="4">STREAMING ADS</option>
+														<option value="5">SOCIAL MEDIA</option>
+														<option value="6">PODCAST ADS</option>
+														<option value="7">COMMERCIAL ADS</option>
+														<option value="8">REMARKETING</option>
+														<option value="9">digital billboard</option>
+														<option value="10">PAID MEDIA GOOGLE ADWORD</option>
+														<option value="11">other digital marketing service</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Impression</label>
+													<input type="text" required class="form-control" id="listing_type" placeholder="Listing Type" name="impression">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Cost</label>
+													<input type="text" required class="form-control" id="listing-Position" name="cost">
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Description</label>
+													<textarea class="form-control" id="listing-Position" name="description" required ></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary btn-pill">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div> -->
+
+					<!-- popup for delete -->
+					<!-- <div class="modal fade modal-add-contact" id="delete" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						<div class="modal-content">
+							<form action="" method="get" id="deletetypeoflisting1">
+								{% csrf_token %}
+								<div class="modal-header px-4">
+									<h5 class="modal-title" id="exampleModalCenterTitle"></h5>
+								</div>
+
+								<div class="modal-body px-4">
+									
+									<div class="row mb-2">
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label for="firstName">Do you want to delete Permanently?</label>
+												
+											</div>
+										</div>									
+									</div>
+								</div>
+
+								<div class="modal-footer px-4">
+									<button type="button" class="btn btn-secondary btn-pill"
+										data-bs-dismiss="modal">Cancel</button>
+									<button type="submit" class="btn btn-primary btn-pill" value="Delete" name="action">Delete</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					</div> -->
+
+					<!-- Edit data -->
+					<!-- <div class="modal fade modal-add-contact" id="edit" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="" id="updatelisting" method="post">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Type Of Listing</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="">Type Of Listing</label>
+													<select class="form-select form-control" name="type_of_listing" aria-label="Default select example">
+														
+														<option id="type" value=""></option>
+														
+														<option id="type1" value=""></option>
+													  </select>
+												</div>
+											</div>
+
+											<div class="col-lg-12">
+												<div class="form-group">
+													<label for="listing_type">Impression</label>
+													<input type="text" class="form-control" value="" id="listing" placeholder="Listing Type" name="impression">
+												</div>
+											</div>
+
+											<div class="col-lg-12">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Cost</label>
+													<input type="text" class="form-control" id="position" value="" name="cost">
+												</div>
+											</div>
+											
+											<div class="col-lg-12">
+												<div class="form-group">
+													<label for="firstName">Description</label>
+													<textarea name="description" class="form-control" id="status"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary btn-pill">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div> -->
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+
+
+
+			<!-- <script>
+				function edittypeoflisting(id,val1,val2,val3,val4){    //'editproductlist' onclick function on edit button
+						console.log(val1)
+						console.log(val2)
+						console.log(val3)
+						console.log(val4)
+						document.getElementById('updatelisting').action ='/Update_Boostmarketingplan/'+id;    //pass url in script action & in bracket pass id from form
+						document.getElementById("listing").value = val2;
+						document.getElementById("position").value = val3;
+						document.getElementById("status").value = val4;
+					}
+			</script>
+
+			
+
+			<script>
+				function deletetypeoflisting(id)
+				{
+					console.log(id);
+					document.getElementById("deletetypeoflisting1").action='/Delete_Boostmarketingplan/'+id;
+				}
+			</script> -->
+
+<!--start for page reload  -->
+<script>
+	window.history.replaceState({}, document.title, "/" + "boostmarketingplan");
+</script>
+<!--end for page reload  -->			
+{% endblock %}

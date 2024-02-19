@@ -1,0 +1,213 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.form-check-input.selectall
+	{
+		width: 2rem;
+		height: 2rem;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+							<h1>Edit Coupon And Promo</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>Edit-Coupon-And-Promo</p>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-header card-header-border-bottom">
+									<h2>Edit Coupon And Promo</h2>
+								</div>
+
+								<div class="card-body">
+									<div class="">
+										
+										<div class="col-lg-12">
+											<div class="ec-vendor-upload-detail">
+												<form class="row g-3" action="{% url 'couponandpromoedit' editcouponandpromo.id %}" method="POST" >
+													{% csrf_token %}
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="position">Coupon Name</label>
+															<input type="text" class="form-control" id=""  name="coupon_name"  value="{{editcouponandpromo.name}}">
+														</div>
+													</div>
+													
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="country_code">Coupon Code</label>
+															<input type="text" class="form-control" id="" name="coupon_code" value="{{editcouponandpromo.couponcode}}">
+														</div>
+													</div>
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="country_name">Number of User</label>
+															<input type="number" class="form-control" id=""  name="number_of_user" value="{{editcouponandpromo.number_of_user}}">
+														</div>
+													</div>
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="country_name">Start Date</label>
+															<input type="date" class="form-control" id=""  name="start_date" value="{{editcouponandpromo.startdate|date:'Y-m-d'}}">
+														</div>
+													</div>
+													
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="country_name">End Date</label>
+															<input type="date" class="form-control" id=""  name="end_date" value="{{editcouponandpromo.enddate|date:'Y-m-d'}}">
+														</div>
+													</div>
+
+													
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="firstName">Coupon For</label>
+															<select class="form-select form-control" name="coupon_for" aria-label="Default select example" >
+																    {% if editcouponandpromo.couponfor %}
+																	<option value="1">Advertisement</option>
+																	<option value="0">Subscription Plan</option>
+																	{% else %}
+																	<option value="0">Subscription Plan</option>
+																	<option value="1">Advertisement</option>
+																	{% endif %}
+															</select>
+														</div>
+													</div>
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="firstName">User Type</label>
+															<select class="form-select form-control" name="user_type" aria-label="Default select example" >
+																{% if editcouponandpromo.user_type %}
+																<option value="1">All</option>
+																<option value="0">New</option>
+																{% else %}	
+																<option value="0">New</option>
+																<option value="1">All</option>
+                                                                {% endif %}
+															</select>
+														</div>
+													</div>
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="firstName">Discount Type</label>
+															<select class="form-select form-control" name="discount_type" aria-label="Default select example" >
+																
+																	{% if editcouponandpromo.discount_type %}
+																	<option value="1">Percent</option>
+																	<option value="0">Monthly</option>
+																	{% else %}
+																	<option value="0">Monthly</option>
+																	<option value="1">Percent</option>
+																	{% endif %}
+																	
+															</select>
+														</div>
+													</div>
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="country_name">Discount</label>
+															<input type="number" class="form-control" id=""  name="discount" value="{{editcouponandpromo.discount}}">
+														</div>
+													</div>
+
+													<div class="col-md-4">
+														<label class="form-label">is Active</label>
+														<select name="is_active" id="Categories" class="form-select" >
+																{% if editcouponandpromo.is_active %}
+																<option value="1">Active</option>
+																<option value="0">Deactive</option>
+																{% else %}
+																<option value="0">Deactive</option>
+																<option value="1">Active</option>
+																{% endif %}
+														</select>
+													</div>
+
+													<div class="col-lg-4">
+														<div class="form-group">
+															<label for="firstName">Account Type</label>
+															<select class="form-select form-control" name="account_type" aria-label="Default select example" id="textBox" multiple >
+																
+																	
+																
+																	{% if "1" in editcouponandpromo.account_type %}
+																	<option value="1" selected>Agent</option>
+																	{% else %}
+																	<option value="1">Agent</option>
+																	{% endif %}
+
+
+																	{% if "2" in editcouponandpromo.account_type %}
+																	<option value="2" selected>Investor/Developer</option>
+																	{% else %}
+																	<option value="2" >Investor/Developer</option>
+																    {% endif %}
+                                                                
+																	{% if "3" in editcouponandpromo.account_type %}
+																	<option value="3" selected>FSBHO</option>
+																	{% else %}
+																	<option value="3" >FSBHO</option>
+																	{% endif %}
+
+                                                                    {% if  "4" in editcouponandpromo.account_type%}
+																	<option value="4" selected>Management</option>
+																	{% else %}
+																	<option value="4" >Management</option>
+																	{% endif %}
+
+																
+															</select>
+														</div>
+													</div>
+		
+													<div class="col-lg-1 ">
+														<div class="form-group ">
+															<label for="country_code">Select All</label>
+															<input class="form-check-input selectall" type="checkbox"  id="chkPassport" name="select_all" onclick="enableDisable(this.checked)">
+														</div>
+													</div>
+													
+													
+													<div class="col-md-12">
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+<!-- start checkbox disable  -->
+<script type="text/javascript">
+	function enableDisable(bEnable){
+
+        var data=document.getElementById("chkPassport");
+		if(data.checked == true)
+		{
+			document.getElementById("textBox").disabled=true;
+		}
+		else{
+			document.getElementById("textBox").disabled=false;
+		}
+		
+    }
+</script>
+<!-- end checkbox disable  -->
+{% endblock %}

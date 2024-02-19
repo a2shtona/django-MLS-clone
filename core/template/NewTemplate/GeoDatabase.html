@@ -1,0 +1,2566 @@
+{% extends "NewTemplate/base2.html"%}
+{% load static %}
+{% block content %}
+<style>
+    .numbered{
+        text-align: end;
+        color: black;
+        font-weight: 500;
+        font-size: 20px;
+    }
+    .card-color{
+        background-color: #88aaf3;
+        color: #282727;
+        border-radius: 6px;
+    }
+    .card-border{
+        border: none;
+    }
+    .vertical-line{
+        padding-right: 8px;
+        border-right: black solid 1px;
+        padding-bottom: 1px;
+        height: 30px;
+        margin-right: 0.5rem !important;
+    }
+    .right{
+        padding-bottom: 5px !important;
+    }
+    .list-user{
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0px;
+    }
+    .card-mini{
+        gap: 20px;
+    }
+    .card-mini > li{
+        flex: 1;
+    }
+    .card-mini > li button{
+        padding: 1.63rem !important;
+        width: 100%;
+        font-size: 1.25125rem;
+        color: #000 !important;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link, .headcolor{
+        background-color: #88aaf3;
+        color: #000 !important;
+    }
+    .sidebtn{
+        display: flex;
+        justify-content: end;
+        margin: 3px;
+    }
+    
+    .all-user-serach{
+        display: flex;
+        align-items: end;
+        justify-content: end;
+        margin-bottom: 5px;
+    }
+
+    .all-user-serach input{
+        font-size: 17px;
+        width: 18%;
+        border-radius: 5px;
+        border: 1px solid;
+        padding-inline: 8px;
+    }
+
+    .all-user-serach button{
+        border: 1px solid;
+        font-size: 17px;
+        padding-inline: 7px;
+        border-radius: 0px 5px 5px 0px;
+    }
+
+</style>
+<!-- CONTENT WRAPPER -->
+<div class="ec-content-wrapper">
+    <!-- Content -->
+    <div class="content">
+        <div class="breadcrumb-wrapper breadcrumb-contacts">
+            <div>
+                <h1>Geo-Database</h1>
+            </div>
+        </div>
+        <!-- Top Statistics -->
+        <ul class="nav nav-tabs geodatabase card-mini" id="myTab" role="tablist">
+            <li class="nav-item card-color" role="presentation">
+              <button class="nav-link active" id="property-setting-tab" data-bs-toggle="tab" data-bs-target="#property-setting" type="button" role="tab" aria-controls="property-setting" aria-selected="true">Property Settings</button>
+            </li>
+            <li class="nav-item card-color" role="presentation">
+              <button class="nav-link" id="filter-tab" data-bs-toggle="tab" data-bs-target="#filter" type="button" role="tab" aria-controls="filter" aria-selected="false">Filter Fields</button>
+            </li>
+            <li class="nav-item card-color" role="presentation">
+              <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location" type="button" role="tab" aria-controls="location" aria-selected="false">Location</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <!-- Property Setting -->
+            <div class="tab-pane fade show active" id="property-setting" role="tabpanel" aria-labelledby="property-setting-tab">
+                <div class="card bg-white profile-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-12">
+                            <div class="profile-content-right profile-right-spacing py-5 user-profile-tab-content">
+                                <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border align-items-center" id="myProfileTab" role="tablist">
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link active right location-tab" href="property-listing-type-tab" data-bs-toggle="tab" data-bs-target="#property-listing-type" role="tab">Main Search</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="property-type-tab" data-bs-toggle="tab" data-bs-target="#property-type" role="tab">Category</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="property-main-category-tab" data-bs-toggle="tab" data-bs-target="#property-main-category" role="tab">Type</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="property-sub-category-tab" data-bs-toggle="tab" data-bs-target="#property-sub-category" role="tab">Sub Type</a>
+                                    </li>
+                                    <a href="{{propetyexcelfileobj.excel.url}}" class="text-dark text-decoration-none ms-auto fw-bold" download>
+                                        Property_Sample_sheet
+                                    </a>
+                                    <button type="button" class="btn btn-primary ml-2" data-bs-toggle="modal" data-bs-target="#addProperty">Add Property Listing</button>
+                                    <button type="button" class="btn btn-primary ml-2" data-bs-toggle="modal" data-bs-target="#uploadProperty">Upload Property</button>
+                                    <!-- Modal -->
+                                    <!-- Upload -->
+                                    <div class="modal fade" id="uploadProperty" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form action="{% url 'UploadPropertyDataAdmin' %}" method="post" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="modal-header px-4">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Upload Property Excel</h5>
+                                                    </div>
+                                                    <div class="modal-body px-4">
+                                                        <div class="row mb-2">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Upload Csv</label>
+                                                                    <input type="file" class="form-control" id="listing_type" name="myfileproperty"required accept=".xlsx">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer px-4">
+                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Add -->
+                                    <div class="modal fade" id="addProperty" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form action="{% url 'AddPropertylistingAll' %}" method="post">
+                                                    {% csrf_token %}
+                                                    <div class="modal-header px-4">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Property Listing</h5>
+                                                    </div>
+                                                    <div class="modal-body px-4">
+                                                        <div class="row mb-2">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Main Search</label>
+                                                                    <input list="main-listing-property" class="form-control" type="text" name="main_listing_id" id="main-listing-property-id" required>
+                                                                    <datalist id="main-listing-property">
+                                                                        {% for i in propety_listing_type %}
+                                                                        <option value="{{i.property_listing_name}}">{{i.property_listing_name}}</option>
+                                                                        {% endfor %}
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Category</label>
+                                                                    <input list="sub-listing-property-id" class="form-control" type="text" name="sub_listing_id" id="sub-listing-property" required>
+                                                                    <datalist id="sub-listing-property-id">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Create Type</label>
+                                                                    <input list="main-category-property-id" class="form-control" type="text" name="main_category_id" id="main-category-property" required>
+                                                                    <datalist id="main-category-property-id">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Position</label>
+                                                                    <input type="number" required class="form-control" id="listing-Position" name="main_category_position">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Create Sub-Type</label>
+                                                                    <input list="sub-category-property-id"
+                                                                    class="form-control" type="text" name="sub_category_id" id="sub-category-property">
+                                                                    <datalist id="sub-category-property-id">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Position</label>
+                                                                    <input type="number" required class="form-control" id="listing-Position" name="sub_category_postition">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer px-4">
+                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Model -->
+                                </ul>
+                                
+                                <div class="tab-content px-3 px-xl-5" id="myTabContent">
+                                    <!-- Property Type -->
+                                    <div class="tab-pane fade show active" id="property-listing-type" role="tabpanel" aria-labelledby="property-listing-type-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="all-user-serach input-group">
+                                                                <input type="text" id="search-input-listing-type-listing"  placeholder="Search...">
+                                                                <button id="search-btn-listing-type-listing" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                            </div>
+                                                            <div class="sidebtn">
+                                                                <!-- <button type="button" class="ml-3 btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddlistingNameManually">Add Property Listing</button> -->
+                                                                <!-- Add Main Property -->
+                                                                <div class="modal fade modal-add-contact" id="AddlistingNameManually" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                        <div class="modal-content">
+                                                                            <form action="{% url 'AddAdminMainListingType' %}" method="post">
+                                                                                {% csrf_token %}
+                                                                                <div class="modal-header px-4">
+                                                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Property Listing</h5>
+                                                                                </div>
+                                                                                <div class="modal-body px-4">
+                                                                                    <div class="row mb-2">
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="firstName">Listing</label>
+                                                                                                <input type="text" required class="form-control" id="listing_type" placeholder="Listing Type" name="main_listing_type">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group mb-4">
+                                                                                                <label for="listing-Position">Listing Position</label>
+                                                                                                <input type="number" required class="form-control" id="listing-Position" name="listingposition">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer px-4">
+                                                                                    <button type="button" class="btn btn-secondary btn-pill"
+                                                                                        data-bs-dismiss="modal">Cancel</button>
+                                                                                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End Main Property -->
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Listing Name</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="property-of-listing-data">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-listing-type-listing" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-listing-type-listing" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Property Type -->
+
+                                    <!-- Property Type -->
+                                    <div class="tab-pane fade show" id="property-type" role="tabpanel" aria-labelledby="property-type-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="all-user-serach input-group">
+                                                                <input type="text" id="search-input-type-listing"  placeholder="Search...">
+                                                                <button id="search-btn-type-listing" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <div class="sidebtn">
+                                                                    <!-- <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddlistingTypeNameManually">Add Property listing Type</button> -->
+                                                                    <!-- Add Main Property -->
+                                                                    <div class="modal fade modal-add-contact" id="AddlistingTypeNameManually" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddAdminSubListingType' %}" method="post">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New Property listing Type</h5>
+                                                                                    </div>
+                                                                                    <div class="modal-body px-4">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Listing</label>
+                                                                                                    <select class="form-select form-control" name="listing" aria-label="Default select example">
+                                                                                                        {% for propety_listing_type in propety_listing_type %}
+                                                                                                        <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                                                                        {% endfor %}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Listing Type</label>
+                                                                                                    <input type="text" required class="form-control" id="listing_type" placeholder="Listing Type" name="sub_listing_type">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">User Listing Type</label>
+                                                                                                    <select class="form-select form-control" name="user_listing_type" aria-label="Default select example">
+                                                                                                        <option value="Buy">Buy</option>
+                                                                                                        <option value="Lease">Lease</option>
+                                                                                                        <option value="Rent">Rent</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group mb-4">
+                                                                                                    <label for="listing-Position">Listing Position</label>
+                                                                                                    <input type="number" required class="form-control" id="listing-Position" name="listingposition">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End Main Property -->
+                                                                </div>
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Type of Listing</th>
+                                                                            <th>Listing Type</th>
+                                                                            <th>User Show</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="type-of-listing-data">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-type-listing" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-type-listing" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Property Type -->
+    
+                                    <!-- Property Main Category -->
+                                    <div class="tab-pane fade show" id="property-main-category" role="tabpanel" aria-labelledby="property-main-category-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="all-user-serach input-group">
+                                                                <input type="text" id="search-input-main-category"  placeholder="Search...">
+                                                                <button id="search-btn-main-category" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <div class="sidebtn">
+                                                                    <!-- <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyMain">Add Property Main Category</button> -->
+                                                                    <!-- Add Property Main Categroty -->
+                                                                    <div class="modal fade modal-add-contact" id="addPropertyMain" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddAdminMainCategory'%}" method="post" data-city-url="{% url 'SublistingView' %}" id="maincategoryform">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New Main Category</h5>
+                                                                                    </div>
+                                                                                    <div class="modal-body px-4">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Type Of Listing</label>
+                                                                                                    <select class="form-select form-control" name="listing" aria-label="Default select example" id="mainlistingid" required>
+                                                                                                        <option value="">--Select Main Listing--</option>
+                                                                                                        {% for propety_listing_type in propety_listing_type %}
+                                                                                                        <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                                                                        {% endfor %}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Type Of Listing</label>
+                                                                                                    <select class="form-control" name="sublistingtype" id="sub-listingtype" required>
+                                                                                                        <option value="">--Select First Main Listing--</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="listing_type">Main category Name</label>
+                                                                                                    <input type="text" class="form-control" id="listing_type" placeholder="Main Category Name" name="main_category" placeholdername="main_category_name" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group mb-4">
+                                                                                                    <label for="listing-Position">Main Category Position</label>
+                                                                                                    <input type="number" class="form-control" id="listing-Position" name="main_categoryposition" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End Property Main Categroty -->
+                                                                </div>
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Type of Listing</th>
+                                                                            <th>Listing Type</th>
+                                                                            <th>Main Category</th>
+                                                                            <th>Position</th>
+                                                                            <!-- <th>Status</th> -->
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="data-main-category">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-main-category" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-main-category" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Property Main Category -->
+    
+                                    <!-- Property Sub Category -->
+                                    <div class="tab-pane fade show" id="property-sub-category" role="tabpanel" aria-labelledby="property-sub-category-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="all-user-serach input-group">
+                                                                <input type="text" id="search-input-sub-category"  placeholder="Search...">
+                                                                <button id="search-btn-sub-category" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <div class="sidebtn">
+                                                                    <!-- <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertySub">Add Property Sub Category</button> -->
+                                                                    <!-- Add Property Sub Category -->
+                                                                    <div class="modal fade modal-add-contact" id="addPropertySub" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddAdminSubCategory' %}" method="post" id="subcategoryform" data-city-url="{% url 'MainCategorylisting' %}">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New Sub Category</h5>
+                                                                                    </div>
+                                                                                    <div class="modal-body px-4">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Select Main Category</label>
+                                                                                                    <select class="form-select form-control" name="sub_listing" aria-label="Default select example" id="sublistingid" required>
+                                                                                                        <option value="">--Select Property Listing Type--</option>
+                                                                                                        {% for item in propertylistingtypeobj %}
+                                                                                                            <option value="{{item.id}}">{{item.type_of_listing.property_listing_name}}&nbsp;-&nbsp;{{item.listing_type}}</option>
+                                                                                                        {% endfor %}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Type Of Listing</label>
+                                                                                                    <select class="form-control" name="main_category_id" id="main-category-obj" required>
+                                                                                                        <option value="">--Select First Main Listing--</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                    
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="listing_type">Sub category Name</label>
+                                                                                                    <input type="text" class="form-control" id="listing_type" placeholder="Listing Type" name="sub_category_name" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="listing_type">Sub category Position</label>
+                                                                                                    <input type="number" class="form-control" id="listing-Position" name="sub_categoryposition" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                    
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End Property Sub Categroty -->
+                                                                </div>
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Type of listing</th>
+                                                                            <th>Listing Type</th>
+                                                                            <th>Main Category Name</th>
+                                                                            <th>Sub category Name</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                        
+                                                                    <tbody id="sub-category-data">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-sub-category" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-sub-category" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Property Sub Category -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Property Setting -->
+
+            <!-- Location -->
+            <div class="tab-pane fade show" id="location" role="tabpanel" aria-labelledby="location-tab">
+                <div class="card bg-white profile-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-12">
+                            <div class="profile-content-right profile-right-spacing py-5 user-profile-tab-content">
+                                <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border align-items-center" id="myProfileTab" role="tablist">
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link active right location-tab" href="country-tab" data-bs-toggle="tab" data-bs-target="#country" role="tab">Country</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="state-tab" data-bs-toggle="tab" data-bs-target="#state" role="tab">State</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="city-tab" data-bs-toggle="tab" data-bs-target="#city" role="tab">City</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="town-tab" data-bs-toggle="tab" data-bs-target="#town" role="tab">Town</a>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <a class="nav-link right location-tab" href="zip-tab" data-bs-toggle="tab" data-bs-target="#zip" role="tab">Zip</a>
+                                    </li>
+                                    <a href="{{loactionexcelobj.excel.url}}" class="text-dark text-decoration-none ms-auto fw-bold" download>
+                                        Location_Sample_sheet
+                                    </a>
+                                    <button type="button" class="ml-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLocation">Add Location</button>
+                                    <button type="button" class="ml-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadlocation">Upload Location</button>
+                                    <!-- Modal -->
+                                        <div class="modal fade" id="uploadlocation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form action="{% url 'AddLocation'%}" method="post" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="modal-header px-4">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Upload Location Excel</h5>
+                                                    </div>
+                                                    <div class="modal-body px-4">
+                                                        <div class="row mb-2">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Upload Csv</label>
+                                                                    <input type="file" class="form-control" id="listing_type" placeholder="Main Category Name" name="myfile" placeholdername="main_category_name" required accept=".xlsx">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer px-4">
+                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    <!-- End Model -->
+
+                                    <!-- Add Location -->
+                                    <div class="modal fade" id="addLocation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form action="{% url 'LocationAddAdminSide' %}" method="post" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="modal-header px-4">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Location</h5>
+                                                    </div>
+                                                    <div class="modal-body px-4">
+                                                        <div class="row mb-2">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Country Name</label>
+                                                                    <input list="country-listing" class="form-control" type="text" name="country_name" id="country-listing-id" required>
+                                                                    <datalist id="country-listing">
+                                                                        {% for i in countrymasterobj %}
+                                                                        <option value="{{i.country_name}}">{{i.country_name}}</option>
+                                                                        {% endfor %}
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Country Code</label>
+                                                                    <input list="country-code-listing" class="form-control" type="number" name="country_code"required>
+                                                                    <!-- <datalist id="cityposition-listing">
+                                                                    </datalist> -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">State</label>
+                                                                    <input list="state-listing" class="form-control" type="text" name="state_name" id="state-listing-id" required>
+                                                                    <datalist id="state-listing">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">City</label>
+                                                                    <input list="city-listing" class="form-control" type="text" name="city_name" id="city-listing-id" required>
+                                                                    <datalist id="city-listing">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">City Position</label>
+                                                                    <input list="cityposition-listing" class="form-control" type="number" name="cityposition_name" required>
+                                                                    <!-- <datalist id="cityposition-listing">
+                                                                    </datalist> -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Town</label>
+                                                                    <input list="town-listing" class="form-control" type="text" name="town_name" id="town-listing-id" required>
+                                                                    <datalist id="town-listing">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Town Position</label>
+                                                                    <input list="townposition-listing" class="form-control" type="number" name="townposition_name" required>
+                                                                    <!-- <datalist id="townposition-listing">
+                                                                    </datalist> -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Zip Code</label>
+                                                                    <input list="zip-listing" class="form-control" type="text" name="zip_name" id="zip-listing-id" required>
+                                                                    <datalist id="zip-listing">
+                                                                    </datalist>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="listing_type">Zip Code Position</label>
+                                                                    <input list="zipposition-listing" class="form-control" type="number" name="zipposition_name" required>
+                                                                    <!-- <datalist id="zipposition-listing">
+                                                                    </datalist> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer px-4">
+                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Location -->
+                                </ul>
+                                <!-- Country -->
+                                <div class="tab-content px-3 px-xl-5" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="country" role="tabpanel" aria-labelledby="country-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input12"  placeholder="Search...">
+                                                                    <button id="search-btn12" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="button" class="ml-3 btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCountryManually">Add Country</button>
+                                                                </div> -->
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="AddCountryManually" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered">
+                                                                        <div class="modal-content">
+                                                                            <form action="{% url 'AddCountryAdmin' %}" method="post">
+                                                                                {% csrf_token %}
+                                                                                <div class="modal-header px-4">
+                                                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Country</h5>
+                                                                                </div>
+                                                                                <div class="modal-body px-4">
+                                                                                    <div class="row mb-2">
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="position">Position</label>
+                                                                                                <input type="number" class="form-control" id="" placeholder=" Position" name="position" placeholdername="Position" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="country_code">Country Code</label>
+                                                                                                <input type="number" class="form-control" id="" placeholder=" Country Code" name="country_code" placeholdername="country_code" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="country_name">Country Name</label>
+                                                                                                <input type="text" class="form-control" id="" placeholder="Country Name" name="country_name" placeholdername="country_name" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer px-4">
+                                                                                    <button type="button" class="btn btn-secondary btn-pill"
+                                                                                        data-bs-dismiss="modal">Cancel</button>
+                                                                                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End Model -->
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Country Name</th>
+                                                                            <th>Country Code</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="country-list">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                    {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn12" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn12" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show" id="state" role="tabpanel" aria-labelledby="state-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input13"  placeholder="Search...">
+                                                                    <button id="search-btn13" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#AddStateManually" class="ml-3 btn btn-primary">Add State</button>
+                                                                </div> -->
+                                                                <!-- Modal -->
+                                                                    <div class="modal fade" id="AddStateManually" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddStateAdmin'%}" method="post">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New State</h5>
+                                                                                    </div>
+                                                                                    <div class="modal-body px-4">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Select Country</label>
+                                                                                                    <select class="form-select form-control" name="country_id" aria-label="Default select example" required>
+                                                                                                        {% for item in countrymasterobj %}
+                                                                                                            <option value="{{item.id}}">{{item.country_name}}</option>
+                                                                                                        {% endfor %}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="listing_type">State Name</label>
+                                                                                                    <input type="text" class="form-control" id="listing_type" placeholder="State Name" name="state_name" placeholdername="main_category_name" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group mb-4">
+                                                                                                    <label for="listing-Position">Position</label>
+                                                                                                    <input type="number" class="form-control" id="listing-Position" name="position" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                <!-- End Model -->
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                    data-bs-target="">Add Property Type</button>
+                                                                </div> -->
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Country Name</th>
+                                                                            <th>State Name</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="state-list">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn13" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn13" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show" id="city" role="tabpanel" aria-labelledby="city-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input14"  placeholder="Search...">
+                                                                    <button id="search-btn14" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#AddCityManually" class="ml-3 btn btn-primary">Add City</button>
+                                                                </div> -->
+                                                                <!-- Modal -->
+                                                                    <div class="modal fade" id="AddCityManually" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddCityAdmin'%}" method="post" enctype="multipart/form-data">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New City</h5>
+                                                                                    </div>
+                                                                                    <div class="modal-body px-4">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Select state</label>
+                                                                                                    <select class="form-select form-control" name="state_id" aria-label="Default select example" required>
+                                                                                                        {% for item in statemasterobj %}
+                                                                                                            <option value="{{item.id}}">{{item.state_name}}</option>
+                                                                                                        {% endfor %}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="listing_image">City Image</label>
+                                                                                                    <input type="file" class="form-control" placeholder="City Image" name="city" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="listing_type">City Name</label>
+                                                                                                    <input type="text" class="form-control" id="listing_type" placeholder="City Name" name="city_name" placeholdername="main_category_name" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group mb-4">
+                                                                                                    <label for="listing-Position">Position</label>
+                                                                                                    <input type="number" class="form-control" id="listing-Position" name="position" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                <!-- End Model -->
+                                                            </div>
+
+                                                            <div class="table-responsive">
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                    data-bs-target="">Add Property Type</button>
+                                                                </div> -->
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Country Name</th>
+                                                                            <th>State Name</th>
+                                                                            <!-- <th>City Image</th> -->
+                                                                            <th>City Name</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="city-list">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn14" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn14" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show" id="town" role="tabpanel" aria-labelledby="town-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input15"  placeholder="Search...">
+                                                                    <button id="search-btn15" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#AddAreaManually" class="ml-3 btn btn-primary">Add Area</button>
+                                                                </div> -->
+
+                                                                <!-- Modal -->
+                                                                    <div class="modal fade" id="AddAreaManually" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddAreaAdmin' %}" method="post">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New Area Master</h5>
+                                                                                    </div>
+                                                
+                                                                                    <div class="modal-body px-4">
+                                                                                        
+                                                
+                                                                                        <div class="row mb-2">
+                                                
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="position">Position</label>
+                                                                                                    <input type="number" class="form-control" id="" placeholder=" Position" name="position" placeholdername="Position" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">City Master</label>
+                                                                                                    <select class="form-select form-control" name="city_master" aria-label="Default select example" >
+                                                                                                        {% for item in citymasterobj %}
+                                                                                                            <option value="{{item.id}}">{{item.city_name}} </option>
+                                                                                                        {% endfor %}
+                                                                                                      </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="area_name">Town Name</label>
+                                                                                                    <input type="text" class="form-control" id="area_name" placeholder="Town name" name="area_name" placeholdername="area_name" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                
+                                                                                        </div>
+                                                                                    </div>
+                                                
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                <!-- End Model -->
+
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                    data-bs-target="">Add Property Type</button>
+                                                                </div> -->
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Country Name</th>
+                                                                            <th>State Name</th>
+                                                                            <th>City Name</th>
+                                                                            <th>Town Name</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="town-list">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn15" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn15" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show" id="zip" role="tabpanel" aria-labelledby="zip-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            
+                                                            <div class="d-flex">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input16"  placeholder="Search...">
+                                                                    <button id="search-btn16" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <!-- <div class="sidebtn">    
+                                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#AddZipManually" class="ml-3 btn btn-primary">Add Zip</button>
+                                                                </div> -->
+                                                                <!-- Modal -->
+                                                                    <div class="modal fade" id="AddZipManually" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered">
+                                                                            <div class="modal-content">
+                                                                                <form action="{% url 'AddZipAdmin' %}" method="post">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="modal-header px-4">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New Area Master</h5>
+                                                                                    </div>
+                                                                                    <div class="modal-body px-4">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="position">Position</label>
+                                                                                                    <input type="number" class="form-control" id="" placeholder=" Position" name="position" placeholdername="Position" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="firstName">Area Master</label>
+                                                                                                    <select class="form-select form-control" name="area_master" aria-label="Default select example" >
+                                                                                                        {% for item in areamasterobj %}
+                                                                                                            <option value="{{item.id}}">{{item.area_name}} </option>
+                                                                                                        {% endfor %}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-6">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="area_name">Zip Code</label>
+                                                                                                    <input type="text" class="form-control" id="area_name" placeholder="zip code" name="zip_code" placeholdername="zip_code" required>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer px-4">
+                                                                                        <button type="button" class="btn btn-secondary btn-pill"
+                                                                                            data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                <!-- End Model -->
+                                                            </div>
+                                                            
+                                                            <div class="table-responsive">
+                                                                <!-- <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                    data-bs-target="">Add Property Type</button>
+                                                                </div> -->
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Country Name</th>
+                                                                            <th>State Name</th>
+                                                                            <th>City Name</th>
+                                                                            <th>Town Name</th>
+                                                                            <th>Zipcode</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="zip-list">
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- start paginator -->
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination justify-content-center">
+                            
+                                                                        {% if propertylistingtypeobj.has_previous %}
+                                                                    <li class="page-item ">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    {% for i in obj %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                                                    {% endfor %}
+                            
+                                                                    {% if propertylistingtypeobj.has_next %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="?page={{propertylistingtypeobj.next_page_number}}">Next</a>
+                                                                    </li>
+                                                                    {% endif %}
+                            
+                                                                    </ul>
+                                                                </nav>
+                                                                <!-- end paginator -->
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn16" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn16" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Country -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start Modal -->
+                    <!-- Add Property Type -->
+                    <!-- <div class="modal fade modal-add-contact" id="addTerms" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <form action="{% url 'AddTermsView' %}" method="post" data-city-url="{% url 'SublistingView' %}" id="indexForm">
+                                    {% csrf_token %}
+                                    <div class="modal-header px-4">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">Add New Type Of Listing</h5>
+                                    </div>
+                                    <div class="modal-body px-4">
+                                        <div class="row mb-2">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="firstName">Listing Type</label>
+                                                    <select class="form-select form-control" name="listingmain" aria-label="Default select example" id="listingmain">
+                                                        <option value="">-- Select Type --</option>
+                                                        {% for propety_listing_type in propety_listing_type %}
+                                                        <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="listing_type">Account Type</label>
+                                                    <select class="form-select form-control" name="account_type" aria-label="Default select example">
+                                                        <option value="2">Agent & Broker</option>
+                                                        <option value="5">Landlord & Management</option>
+                                                        <option value="3">Investor & Developer</option>
+                                                        <option value="4">FRBHO & FSBHO</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="listing_type">Sub Listing Type</label>
+                                                    <select class="form-control" name="sublistingtype" id="sublistingtype">
+													</select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="listing-Position">Terms Position</label>
+                                                    <input type="number" required class="form-control" id="listing-Position" name="position">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-4">
+                                                    <label for="listing-Position">Terms</label>
+                                                    <input type="text" required class="form-control" id="trems-postion" name="trems">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer px-4">
+                                        <button type="button" class="btn btn-secondary btn-pill"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- End Property Type -->
+            </div>
+            <!-- End Location -->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('main-listing-property-id').addEventListener('change', function(){
+        const main_id = this.value;
+        console.log(main_id)
+        fetch(`/AllSublistingTypeView/?listing_id=${main_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const sublistingtype = document.getElementById('sub-listing-property-id')
+            sublistingtype.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                sublistingtype.innerHTML += `<option value="${item.listing_type}">${item.listing_type}</option>`;
+            });
+        })
+    })
+
+    document.getElementById('sub-listing-property').addEventListener('change', function(){
+        const sub_id = this.value;
+        fetch(`/AllMainCategoryTypeView/?sub_id=${sub_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const maincategory = document.getElementById('main-category-property-id')
+            maincategory.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                maincategory.innerHTML += `<option value="${item.Main_category}">${item.Main_category}</option>`;
+            });
+        })
+    })
+    document.getElementById('main-category-property').addEventListener('change', function(){
+        const main_category_id = this.value;
+        sub_listing = document.getElementById('sub-listing-property').value;
+        console.log("lllllll",sub_listing)
+        fetch(`/AllSubCategoryTypeView/?main_id=${main_category_id}&sub_listing=${sub_listing}`)
+        .then(response => response.json())
+        .then(data => {
+            const subcategory = document.getElementById('sub-category-property-id')
+            subcategory.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                subcategory.innerHTML += `<option value="${item.property_sub_category_Name}">${item.property_sub_category_Name}</option>`;
+            });
+        })
+    })
+</script>
+
+<script>
+    document.getElementById("country-listing-id").addEventListener('change', function(){
+        const country_id = this.value;
+        fetch(`/AllStateDataName/?Country_name=${country_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const statecountrydropdown = document.getElementById('state-listing')
+            statecountrydropdown.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                statecountrydropdown.innerHTML += `<option value="${item.state_name}">${item.state_name}</option>`;
+            });
+        })
+    })
+
+    document.getElementById("state-listing-id").addEventListener('change', function(){
+        const state_id = this.value;
+        fetch(`/AllCityDataName/?state_name=${state_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const citystatedropdown = document.getElementById('city-listing')
+            citystatedropdown.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                citystatedropdown.innerHTML += `<option value="${item.city_name}">${item.city_name}</option>`;
+            });
+        })
+    })
+
+    document.getElementById("city-listing-id").addEventListener('change', function(){
+        const city_id = this.value;
+        fetch(`/AllTownDataName/?city_name=${city_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const areacitydropdown = document.getElementById('town-listing')
+            areacitydropdown.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                areacitydropdown.innerHTML += `<option value="${item.area_name}">${item.area_name}</option>`;
+            });
+        })
+    })
+
+    document.getElementById("town-listing-id").addEventListener('change', function(){
+        const area_id = this.value;
+        fetch(`/AllZipCodeDataName/?area_name=${area_id}`)
+        .then(response => response.json())
+        .then(data => {
+            const zipareadropdown = document.getElementById('zip-listing')
+            zipareadropdown.innerHTML = '<option value="">---------</option>'
+            data.forEach(item => {
+                zipareadropdown.innerHTML += `<option value="${item.Zipcode}">${item.Zipcode}</option>`;
+            });
+        })
+    })
+
+
+</script>
+
+<!-- Edit Dependency Modal -->
+<div class="modal fade modal-add-contact" id="update-sub-listing-type" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post" id="sub-listing-type-update">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Update Property Listing Type</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Listing</label>
+                                <select name="listing" id="myDropdown" class="form-select form-control"></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Listing Type</label>
+                                <input type="text" class="form-control" name="sub_listing_type" id="listing-type-id" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">User Listing Type</label>
+                                <select class="form-select form-control" name="user_listing_type" id="user-listing-type-obj">
+                                    <option value="" id="usertype1"></option>
+                                    <option value="" id="usertype2"></option>
+                                    <option value="" id="usertype3"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Listing Postion</label>
+                                <input type="number" required class="form-control" id="sub-listing-Position" name="listingposition">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">is Active</label>
+                                <select name="is_active" id="" class="form-select form-control" >
+                                    <option value="" id="sub-listing-status"></option>
+                                    <option value=""id="sub-listing-status1"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Dependency Modal -->
+
+<script>
+    function populateDropdown(mainlisting_name, mainlisting_id){
+        const dropdown = document.getElementById("myDropdown");
+        // Fetch data and populate the dropdown
+        fetch(`/EditSubListingType/`) // Replace the URL with your data source
+            .then(response => response.json())
+            .then(data => {
+                // Loop through the fetched data and create options for the dropdown
+                dropdown.innerHTML = `<option value ="${mainlisting_id}">${mainlisting_name}</option>`;
+                data.forEach(item => {
+                    if (item.property_listing_name === mainlisting_name){
+                    } else {
+                        dropdown.innerHTML += `<option value ="${item.id}">${item.property_listing_name}</option>`;
+                    }
+                });
+            })
+    }
+    function editSubListingTypeData(id, mainlisting_name, mainlisting_id, type, usertype, position, status){
+        populateDropdown(mainlisting_name, mainlisting_id);
+        document.getElementById('listing-type-id').value = type;
+        document.getElementById('sub-listing-Position').value = position;
+        if (usertype === "Buy"){
+            document.getElementById("usertype1").value = "Buy";
+            document.getElementById("usertype1").innerHTML = "Buy";
+            document.getElementById("usertype2").value = "Lease";
+            document.getElementById("usertype2").innerHTML = "Lease";
+            document.getElementById("usertype3").value = "Rent";
+            document.getElementById("usertype3").innerHTML = "Rent";
+        }
+        else if(usertype === "Lease"){
+            document.getElementById("usertype1").value = "Lease";
+            document.getElementById("usertype1").innerHTML = "Lease";
+            document.getElementById("usertype2").value = "Buy";
+            document.getElementById("usertype2").innerHTML = "Buy";
+            document.getElementById("usertype3").value = "Rent";
+            document.getElementById("usertype3").innerHTML = "Rent";
+        }
+        else if(usertype === "Rent"){
+            document.getElementById("usertype1").value = "Rent";
+            document.getElementById("usertype1").innerHTML = "Rent";
+            document.getElementById("usertype2").value = "Lease";
+            document.getElementById("usertype2").innerHTML = "Lease";
+            document.getElementById("usertype3").value = "Buy";
+            document.getElementById("usertype3").innerHTML = "Buy";
+        }
+
+        if (status === 'true'){
+            document.getElementById("sub-listing-status").value = "1";
+            document.getElementById("sub-listing-status").innerHTML = "Active";
+            document.getElementById("sub-listing-status1").value = "0";
+            document.getElementById("sub-listing-status1").innerHTML = "Deactive";
+        } else{
+            document.getElementById("sub-listing-status").value = "0";
+            document.getElementById("sub-listing-status").innerHTML = "Deactive";
+            document.getElementById("sub-listing-status1").value = "1";
+            document.getElementById("sub-listing-status1").innerHTML = "Activate";
+        }
+
+        document.getElementById("sub-listing-type-update").action = "/EditSubListingType/"+id;
+    }
+</script>
+
+<div class="modal fade modal-add-contact" id="edit-Property-main"tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post" id="main-category-id">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Main Category</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Type of listing</label>
+                                <select class="form-select form-control" name="listing" id="main-listing-id" aria-label="Default select example" required></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Type of listing</label>
+                                <select class="form-select form-control" name="sublistingname" id="sub-listing-id-name" required></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="">Main Category Name</label>
+                                <input type="text" class="form-control" placeholder="Main Category Name" name="main_category" id="main-category-name">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Main Category Position</label>
+                                <input type="number" class="form-control" name="main_categoryposition" id="main-category-position">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">is Active</label>
+                                <select name="is_active" id="" class="form-select form-control">
+                                    <option value="" id="main-category-status"></option>
+                                    <option value=""id="main-category-status1"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function listingDropdown(propertylisting_name, propertylisting_id){
+        const dropdown = document.getElementById("main-listing-id");
+        // Fetch data and populate the dropdown
+        fetch(`/EditSubListingType/`) // Replace the URL with your data source
+            .then(response => response.json())
+            .then(data => {
+                // Loop through the fetched data and create options for the dropdown
+                dropdown.innerHTML = `<option value ="${propertylisting_id}">${propertylisting_name}</option>`;
+                data.forEach(item => {
+                    if (item.property_listing_name === propertylisting_name){
+                    } else {
+                        dropdown.innerHTML += `<option value ="${item.id}">${item.property_listing_name}</option>`;
+                    }
+                });
+            })
+    }
+
+    function editMainCategoryData(id, propertylisting_id, propertylisting_name, litingType_id, listingType_name, main_category_name, position, status){
+        listingDropdown(propertylisting_name, propertylisting_id);
+        document.getElementById('main-listing-id').addEventListener('change', function(){
+            const listing_id = this.value;
+            fetch(`/EditMainCategory/?listing_id=${listing_id}`)
+            .then(response => response.json())
+            .then(data => {
+                const sublistingdown = document.getElementById('sub-listing-id-name');
+                sublistingdown.innerHTML = '<option value="">---------</option>';
+                data.forEach(sublisting => {
+                    sublistingdown.innerHTML += `<option value="${sublisting.id}">${sublisting.listing_type}</option>`;
+                });
+            })
+        })
+        document.getElementById('main-category-name').value = main_category_name;
+        document.getElementById('main-category-position').value = position;
+
+        if (status === 'true'){
+            document.getElementById("main-category-status").value = "1";
+            document.getElementById("main-category-status").innerHTML = "Active";
+            document.getElementById("main-category-status1").value = "0";
+            document.getElementById("main-category-status1").innerHTML = "Deactive";
+        } else{
+            document.getElementById("main-category-status").value = "0";
+            document.getElementById("main-category-status").innerHTML = "Deactive";
+            document.getElementById("main-category-status1").value = "1";
+            document.getElementById("main-category-status1").innerHTML = "Activate";
+        }
+
+        document.getElementById('main-category-id').action = "/EditMainCategory/"+id;
+    }
+</script>
+
+<div class="modal fade modal-add-contact" id="edit-sub-category-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post" id="sub-category-form">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Update Sub Category</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Property Listing Type</label>
+                                <select name="sub_listing" id="sub-listing-name-id" class="form-select form-control" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Main Catgeory</label>
+                                <select name="" id="main-category-name-id" class="form-select form-control" required></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="">Sub Category</label>
+                                <input type="text" class="form-control" name="sub_category_name" id="sub-category-name" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Sub Category Position</label>
+                                <input type="number" class="form-control" name="sub_categoryposition" id="sub-category-position">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">is Active</label>
+                                <select name="is_active" id="" class="form-select form-control">
+                                    <option value="" id="sub-category-status"></option>
+                                    <option value=""id="sub-category-status1"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function sublistingDropdown()
+
+    function editSubCategoryData(id, main_listing_id,sub_listing_name, sub_listing_id, main_category_name, main_category_id, sub_category, position, status){
+        console.log("id",id)
+        console.log("main listing id",main_listing_id)
+        console.log("sub listing id",sub_listing_id)
+        console.log("sub listing name",sub_listing_name)
+        console.log("main category id",main_category_id)
+        console.log("main category name",main_category_name)
+        console.log("sub category",sub_category)
+        console.log("position",position)
+        console.log("status",status)
+
+        sublistingDropdown(main_listing_id, sub_listing_id, sub_listing_name)
+
+
+    }
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- All Country Data -->
+<script>
+    $(document).ready(function(){
+        var page = 1;
+        loadData();
+        function loadData(searchQuery = ''){
+            $.ajax({
+                url: '/API_Country/',
+                type: 'GET',
+                data: {
+                    page: page,
+                    search: searchQuery,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var dataList = $('#country-list');
+                    dataList.empty();
+                    $.each(data.results, function(index, item){
+                        var row = $('<tr>');
+                        row.append('<td>' + item.country_name + '</td>'); //name
+                        row.append('<td>' + item.country_code + '</td>'); // email
+                        row.append('<td>' + item.position + '</td>'); // phone
+                        //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                        row.append(
+                            '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" onclick="editCountryData(\'' + item.id + '\',\'' + item.country_name + '\',\'' + item.country_code + '\',\'' + item.position + '\',\'' + item.is_active + '\')" data-bs-toggle="modal" data-bs-target="#editcountrymodel">Edit</a></li><li><a class="dropdown-item" href="/AddCountryAdmin/'+ item.id +'">Delete</a></li></ul></div></td>'
+                            );
+                        dataList.append(row);
+                    });
+                    $('#previous-btn12').prop('disabled', !data.has_previous);
+                    $('#next-btn12').prop('disabled', !data.has_next);
+                }
+            });
+        }
+        // Handle previous page button click
+        $('#previous-btn12').click(function() {
+            if (page > 1) {
+                page -= 1;
+                loadData();
+            }
+        });
+
+        // Handle next page button click
+        $('#next-btn12').click(function() {
+            page += 1;
+            loadData();
+        });
+
+        // Handle search button click
+        $('#search-btn12').click(function() {
+            var searchQuery = $('#search-input12').val(); // Get the search query from the input field
+            page = 1; // Reset the page number to 1
+            loadData(searchQuery); // Load data with the new search query
+        });
+    });
+</script>
+
+<!-- Property Main Listing Type -->
+<script>
+    $(document).ready(function(){
+        var page = 1;
+        loadData();
+        function loadData(searchQuery = ''){
+            $.ajax({
+                url: '/PropertyListingAdminShow/',
+                type: 'GET',
+                data: {
+                    page: page,
+                    search: searchQuery,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var dataList = $('#property-of-listing-data');
+                    dataList.empty();
+                    $.each(data.results, function(index, item){
+                        var row = $('<tr>');
+                        row.append('<td>' + item.property_listing_name + '</td>');
+                        row.append('<td>' + item.position + '</td>');
+                        row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updatemainlistingtype" onclick="editMainListingTypeData(\'' + item.id + '\',\'' + item.property_listing_name +'\',\'' + item.position +'\')">Edit</a></li><li><a class="dropdown-item" href="/PropertyMainlistingDelete/'+ item.id +'">Delete</a></li></ul></div></td>');
+                        dataList.append(row);
+                    });
+                    $('#previous-btn-listing-type-listing').prop('disabled', !data.has_previous);
+                    $('#next-btn-listing-type-listing').prop('disabled', !data.has_next);
+                }
+            });
+        }
+        // Handle previous page button click
+        $('#previous-btn-listing-type-listing').click(function() {
+            if (page > 1) {
+                page -= 1;
+                loadData();
+            }
+        });
+
+        // Handle next page button click
+        $('#next-btn-listing-type-listing').click(function() {
+            page += 1;
+            loadData();
+        });
+
+        // Handle search button click
+        $('#search-btn-listing-type-listing').click(function() {
+            var searchQuery = $('#search-input-listing-type-listing').val(); // Get the search query from the input field
+            page = 1; // Reset the page number to 1
+            loadData(searchQuery); // Load data with the new search query
+        });
+    });
+</script> 
+
+<!-- All Type of Data -->
+<script>
+    $(document).ready(function(){
+        $('.location-tab').click(function(e){
+            e.preventDefault();
+            var locId = $(this).attr('data-bs-target');
+            if (locId === '#state'){
+                StateData();
+            }
+            else if (locId === '#city'){
+                CityData();
+            }
+            else if (locId === '#town'){
+                TownData();
+            }
+            else if (locId === '#zip'){
+                ZipData();
+            }
+            else if (locId === '#property-type'){
+                PropertyType();
+            }
+            else if (locId === '#property-main-category'){
+                PropertyMainCategory();
+            }
+            else if (locId === '#property-sub-category'){
+                PropertySubCategory();
+            }
+        })
+
+        function StateData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_State/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#state-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.country_master.country_name + '</td>'); //name
+                            row.append('<td>' + item.state_name + '</td>'); //name
+                            row.append('<td>' + item.position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#">Edit</a></li><li><a class="dropdown-item" href="/AddStateAdmin/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn13').prop('disabled', !data.has_previous);
+                        $('#next-btn13').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn13').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn13').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn13').click(function() {
+                var searchQuery = $('#search-input13').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function CityData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_City/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#city-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.state_master.country_master.country_name + '</td>'); //name
+                            row.append('<td>' + item.state_master.state_name + '</td>'); //name
+                            // row.append('<td><a href="#"><img src="'+ item.city_image +'" alt="SVG Image" style="height:70px; width:70px"></a></td>');
+                            row.append('<td>' + item.city_name + '</td>'); //name
+                            row.append('<td>' + item.position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#">Edit</a></li><li><a class="dropdown-item" href="/AddCityAdmin/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn14').prop('disabled', !data.has_previous);
+                        $('#next-btn14').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn14').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn14').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn14').click(function() {
+                var searchQuery = $('#search-input14').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function TownData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_Area/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#town-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.city_master.state_master.country_master.country_name + '</td>'); //name
+                            row.append('<td>' + item.city_master.state_master.state_name + '</td>'); //name
+                            row.append('<td>' + item.city_master.city_name + '</td>'); //name
+                            row.append('<td>' + item.area_name + '</td>'); //name
+                            row.append('<td>' + item.position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#">Edit</a></li><li><a class="dropdown-item" href="/AddAreaAdmin/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn15').prop('disabled', !data.has_previous);
+                        $('#next-btn15').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn15').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn15').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn15').click(function() {
+                var searchQuery = $('#search-input15').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function ZipData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_ZipCode/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#zip-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.area_master.city_master.state_master.country_master.country_name + '</td>'); //name
+                            row.append('<td>' + item.area_master.city_master.state_master.state_name + '</td>'); //name
+                            row.append('<td>' + item.area_master.city_master.city_name + '</td>'); //name
+                            row.append('<td>' + item.area_master.area_name + '</td>'); //name
+                            row.append('<td>' + item.Zipcode + '</td>'); // phone
+                            row.append('<td>' + item.position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#">Edit</a></li><li><a class="dropdown-item" href="/AddZipAdmin/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn16').prop('disabled', !data.has_previous);
+                        $('#next-btn16').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn16').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn16').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn16').click(function() {
+                var searchQuery = $('#search-input16').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function PropertyType(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/PropertyListingTypeAdminShow/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#type-of-listing-data');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.type_of_listing.property_listing_name + '</td>'); //name
+                            row.append('<td>' + item.listing_type + '</td>'); // email
+                            row.append('<td>' + item.user_listing_type + '</td>'); // email
+                            row.append('<td>' + item.listing_position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#update-sub-listing-type" onclick="editSubListingTypeData(\'' + item.id + '\',\'' + item.type_of_listing.property_listing_name +'\',\'' + item.type_of_listing.id +'\',\'' + item.listing_type +'\',\'' + item.user_listing_type +'\',\'' + item.listing_position +'\',\'' + item.is_active +'\')">Edit</a></li><li><a class="dropdown-item" href="/PropertySublistingDelete/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-type-listing').prop('disabled', !data.has_previous);
+                        $('#next-btn-type-listing').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-type-listing').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-type-listing').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-type-listing').click(function() {
+                var searchQuery = $('#search-input-type-listing').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function PropertyMainCategory(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/PropertyMainCategoryAdminShow/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#data-main-category');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.listing_type.type_of_listing.property_listing_name + '</td>'); //name
+                            row.append('<td>' + item.listing_type.listing_type + '</td>'); // email
+                            row.append('<td>' + item.Main_category + '</td>'); // email
+                            row.append('<td>' + item.category_position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" onclick="editMainCategoryData(\'' + item.id + '\',\'' + item.listing_type.type_of_listing.id + '\',\'' + item.listing_type.type_of_listing.property_listing_name + '\',\'' + item.listing_type.id + '\',\'' + item.listing_type.listing_type + '\',\'' + item.Main_category + '\',\'' + item.category_position + '\',\'' + item.is_active + '\')" data-bs-toggle="modal" data-bs-target="#edit-Property-main">Edit</a></li><li><a class="dropdown-item" href="/PropertyMainCategoryDelete/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-main-category').prop('disabled', !data.has_previous);
+                        $('#next-btn-main-category').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-main-category').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-main-category').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-main-category').click(function() {
+                var searchQuery = $('#search-input-main-category').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function PropertySubCategory(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/PropertySubCategoryAdminShow/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#sub-category-data');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.property_main_category.listing_type.type_of_listing.property_listing_name + '</td>'); //name
+                            row.append('<td>' + item.property_main_category.listing_type.listing_type + '</td>'); // email
+                            row.append('<td>' + item.property_main_category.Main_category + '</td>'); // email
+                            row.append('<td>' + item.property_sub_category_Name + '</td>'); // email
+                            row.append('<td>' + item.category_position + '</td>'); // phone
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" onclick="editSubCategoryData(\'' + item.id + '\', \'' + item.property_main_category.listing_type.type_of_listing.id + '\', \'' + item.property_main_category.listing_type.listing_type + '\', \'' + item.property_main_category.listing_type.id + '\', \'' + item.property_main_category.Main_category + '\', \'' + item.property_main_category.id + '\', \'' + item.property_sub_category_Name + '\', \'' + item.category_position + '\', \'' + item.is_active + '\')" data-bs-toggle="modal" data-bs-target="#edit-sub-category-modal">Edit</a></li><li><a class="dropdown-item" href="/PropertySubCategoryDelete/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-main-category').prop('disabled', !data.has_previous);
+                        $('#next-btn-main-category').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-main-category').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-main-category').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-main-category').click(function() {
+                var searchQuery = $('#search-input-main-category').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+    });
+</script>
+
+<!-- Edit Model -->
+<!-- Country Edit -->
+<div class="modal fade" id="editcountrymodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="" method="post" id="updatecountrydata">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Country</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="position">Position</label>
+                                <input type="number" class="form-control" id="countryposition" placeholder=" Position" name="position" placeholdername="Position" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="country_code">Country Code</label>
+                                <input type="number" class="form-control" id="countrycode" placeholder=" Country Code" name="country_code" placeholdername="country_code" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="country_name">Country Name</label>
+                                <input type="text" class="form-control" id="countryname" placeholder="Country Name" name="country_name" placeholdername="country_name" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">is Active</label>
+                            <select name="is_active" id="" class="form-select" >
+                                <option value="" id="status"></option>
+                                <option value=""id="status1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Country Edit -->
+
+<!-- Property Main listing -->
+<div class="modal fade modal-add-contact" id="updatemainlistingtype" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post" id="Update-main-listing-type">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Type Of Listing</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="firstName">Listing</label>
+                                <input type="text" class="form-control" id="listing-type-update" placeholder="Listing Type" name="main_listing_type">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group mb-4">
+                                <label for="listing-Position">Listing Position</label>
+                                <input type="number" class="form-control" id="listing-Position-update" name="listingposition">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Property Main listing -->
+<!-- End Edit Model -->
+<script>
+    // Location
+    function editCountryData(id,countryname,countrycode,countryposition,status){
+        console.log(status);
+        document.getElementById("countryposition").value = countryposition;
+        document.getElementById("countrycode").value = countrycode;
+        document.getElementById("countryname").value = countryname;
+        if (status === 'true'){
+            document.getElementById("status").value = "1";
+            document.getElementById("status").innerHTML = "Active";
+            document.getElementById("status1").value = "0";
+            document.getElementById("status1").innerHTML = "Deactive";
+        } else{
+            document.getElementById("status").value = "0";
+            document.getElementById("status").innerHTML = "Deactive";
+            document.getElementById("status1").value = "1";
+            document.getElementById("status1").innerHTML = "Activate";
+        }
+        document.getElementById("updatecountrydata").action = "/UpdateCountryDataAdmin/"+id;
+    }
+
+    // Property listing
+    function editMainListingTypeData(id, name, position){
+        document.getElementById("listing-type-update").value = name;
+        document.getElementById("listing-Position-update").value = position;
+        document.getElementById("Update-main-listing-type").action = "/AddAdminMainListingType/"+id;
+    }
+</script>
+
+<script>
+    $('#mainlistingid').change(function(){
+        var url = $('#maincategoryform').attr("data-city-url");
+        var mainlistingobj = $(this).val();
+        $.ajax({
+            url : url,
+            data:{
+                'listingmain':mainlistingobj
+            },
+            success : function(data){
+                $('#sub-listingtype').html(data);
+            }
+        })
+    })
+</script>
+
+<script>
+    $('#sublistingid').change(function(){
+        var url = $('#subcategoryform').attr("data-city-url")
+        var sublistingidobj = $(this).val();
+        console.log(sublistingidobj)
+        $.ajax({
+            url : url,
+            data:{
+                'sublistingmain':sublistingidobj
+            },
+            success : function(data){
+                $('#main-category-obj').html(data);
+            }
+        })
+    })
+</script>
+
+{% endblock %}

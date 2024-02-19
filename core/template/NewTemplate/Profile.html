@@ -1,0 +1,2183 @@
+{% extends "NewTemplate/base2.html"%}
+{% load static %}
+{% block content %}
+<style>
+    .numbered{
+        text-align: end;
+        color: black;
+        font-weight: 500;
+        font-size: 20px;
+    }
+    .card-color{
+        background-color: #88aaf3;
+        color: #282727;
+        border-radius: 6px;
+    }
+    .card-border{
+        border: none;
+    }
+    .vertical-line{
+        padding-right: 8px;
+        height: 30px;
+        margin-right: 0.5rem !important;
+        margin-bottom: 10px !important;
+    }
+    .vertical-line:not(:last-child){
+        border-right: black solid 1px;
+    }
+    .right{
+        padding-bottom: 5px !important;
+    }
+    .headcolor{
+        background-color: #88aaf3;
+    }
+    .list-user{
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0px;
+    }
+    .sidebtn{
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        margin: 3px;
+        gap: 10px;
+    }
+    .all-user-serach{
+        display: flex;
+        align-items: end;
+        justify-content: end;
+        margin-bottom: 5px;
+    }
+
+    .all-user-serach input{
+        font-size: 17px;
+        width: 18%;
+        border-radius: 5px;
+        border: 1px solid;
+        padding-inline: 8px;
+    }
+
+    .all-user-serach button{
+        border: 1px solid;
+        font-size: 17px;
+        padding-inline: 7px;
+        border-radius: 0px 5px 5px 0px;
+    }
+    /* .profile-content-right.tab-mainmenu ul{
+        display: grid;
+        grid-template-columns: repeat(7, max-content);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 20px 0px;
+    } */
+    .profile-content-right.tab-mainmenu ul li:last-child{
+        grid-column: 1/2;
+        grid-row: 3/4;
+    }
+</style>
+<!-- CONTENT WRAPPER -->
+<div class="ec-content-wrapper">
+    <!-- Content -->
+    <div class="content">
+        <!-- Top Statistics -->
+        <div class="row profile-tab">
+            <div class="col-xl-4 col-sm-6 p-b-15 lbl-card">
+                <div class="card card-mini dash-card card-1">
+                    <div class="card-body card-color">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="mb-1">Total User</h4>
+                            <p class="numbered">{{userprofilecount}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-sm-6 p-b-15 lbl-card">
+                <div class="card card-mini dash-card card-2">
+                    <div class="card-body card-color">
+                        <h4 class="mb-1">
+                            <div class="d-flex justify-content-between">
+                                <div>Agent</div>
+                                <div>{{agentprofilecount}}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>Guest</div>
+                                <div>{{guestprofilecount}}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>Investor</div>
+                                <div>{{investorprofilecount.count}}</div>
+                            </div>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-sm-6 p-b-15 lbl-card">
+                <div class="card card-mini dash-card card-3">
+                    <div class="card-body card-color" style="padding-bottom: 17px;">
+                        <h4 class="mb-1">
+                            <div class="d-flex justify-content-between">
+                                <div>Pending Verification</div>
+                                <div>{{licobj}}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div style="max-width: 80%">Pending Neighborshood Specialist</div>
+                                <div>{{nbpendingcount}}</div>
+                            </div>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Top Statistics -->
+
+        <!-- list -->
+        <div class="card bg-white profile-content">
+            <div class="row tab-container mx-0 pt-3 list-profile">
+                <div class="col-lg-8 col-xl-8 list-user">
+                    <div class="profile-content-right profile-right-spacing tab-mainmenu">
+                        <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border" id="myProfileTab" role="tablist">
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link active right" href="user-tab" data-bs-toggle="tab" data-bs-target="#user" role="tab" aria-controls="user" aria-selected="true">All Users</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="guest-tab" data-bs-toggle="tab" data-bs-target="#guest" role="tab">Guest Users</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="agent-tab" data-bs-toggle="tab" data-bs-target="#agent" role="tab">Agents & Brokers</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="investor-tab" data-bs-toggle="tab" data-bs-target="#investor" role="tab">Investors & Developers</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="manager-tab" data-bs-toggle="tab" data-bs-target="#manager" role="tab">Property Manager & Landlords</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="fsbho-tab" data-bs-toggle="tab" data-bs-target="#fsbho" role="tab">FRBHO & FSBHO</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="advertising-tab" data-bs-toggle="tab" data-bs-target="#advertising" role="tab">Advertising Account</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border" id="myProfileTab1" role="tablist">
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="affiliate-tab" data-bs-toggle="tab" data-bs-target="#affiliate" role="tab">Affiliate Discount</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="promo-tab" data-bs-toggle="tab" data-bs-target="#promo" role="tab">Promo Totals</a>
+                            </li>
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" role="tab">Inactive Users</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border" id="myProfileTab2" role="tablist">
+                            <li class="nav-item vertical-line" role="presentation">
+                                <a class="nav-link right" href="boostmarketing-tab" data-bs-toggle="tab" data-bs-target="#boostmarketing" role="tab">Boostmarketing Users</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xl-4">
+                    <div class="profile-content-right profile-right-spacing">
+                        <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border justify-content-end flex-column align-items-end" id="myProfileTab" role="tablist">
+                            <li class="nav-item mr-0" role="presentation">
+                                <a class="nav-link right" href="pv-tab" data-bs-toggle="tab" style="font-size: 18px;" data-bs-target="#pv" role="tab">Pending Verification ({{licobj}})</a>
+                            </li>
+                            <li class="nav-item mr-0" role="presentation">
+                                <a class="nav-link right" href="pns-tab" data-bs-toggle="tab" style="font-size: 18px;" data-bs-target="#pns" role="tab">Pending NS ({{nbpendingcount}})</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content px-3" id="myTabContent" data-target="myProfileTab">
+                <!-- User -->
+                <div class="tab-pane fade show active" id="user" role="tabpanel"
+                    aria-labelledby="user-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="ec-vendor-list card card-default card-border">
+                            <div class="card-body">
+                                <div class="all-user-serach input-group">
+                                    <input type="text" id="search-input1"  placeholder="Search...">
+                                    <button id="search-btn1" role="button"><i class="mdi mdi-magnify"></i></button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="responsive-data-table" class="table">
+                                        <thead class="headcolor">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Join On</th>
+                                                <th>Account Type</th>
+                                                <th>License Type</th>
+                                                <th>License Number</th>
+                                                <th>Company Name</th>
+                                                <th>Total Members</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="all-user-list">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination">
+                                    <button id="previous-btn" class="btn btn-primary">Previous</button>
+                                    &nbsp;
+                                    <button id="next-btn" class="btn btn-primary">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End User -->
+                
+                <!-- Guest User -->
+                <div class="tab-pane fade show" id="guest" role="tabpanel"
+                    aria-labelledby="guest-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input2"  placeholder="Search...">
+                                            <button id="search-btn2" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-guest-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn1" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn1" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Guest User -->
+
+                <!-- Agent User -->
+                <div class="tab-pane fade show" id="agent" role="tabpanel"
+                    aria-labelledby="agent-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input3"  placeholder="Search...">
+                                            <button id="search-btn3" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-agent-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn2" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn2" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Agent User -->
+
+                <!-- Investor User -->
+                <div class="tab-pane fade show" id="investor" role="tabpanel"
+                    aria-labelledby="investor-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input4"  placeholder="Search...">
+                                            <button id="search-btn4" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-investor-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn3" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn3" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Investor User -->
+
+                <!-- Manager User -->
+                <div class="tab-pane fade show" id="manager" role="tabpanel"
+                    aria-labelledby="manager-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input5"  placeholder="Search...">
+                                            <button id="search-btn5" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-manager-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn4" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn4" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Manager User -->
+
+                <!-- fsbho User -->
+                <div class="tab-pane fade show" id="fsbho" role="tabpanel"
+                    aria-labelledby="fsbho-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input6"  placeholder="Search...">
+                                            <button id="search-btn6" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-fsbho-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn5" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn5" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End fsbho User -->
+
+                <!-- Advertisement User -->
+                <div class="tab-pane fade show" id="advertising" role="tabpanel"
+                aria-labelledby="advertising-tab">
+                   <div class="tab-pane-content mt-5">
+                       <div class="row">
+                           <div class="col-12">
+                               <div class="ec-vendor-list card card-default card-border">
+                                   <div class="card-body">
+                                       <div class="all-user-serach input-group">
+                                           <input type="text" id="search-input7"  placeholder="Search...">
+                                           <button id="search-btn7" role="button"><i class="mdi mdi-magnify"></i></button>
+                                       </div>
+                                       <div class="table-responsive">
+                                           <table id="responsive-data-table" class="table">
+                                               <thead class="headcolor">
+                                                   <tr>
+                                                       <th>Business Name</th>
+                                                       <th>Business Email</th>
+                                                       <th>Business Phone</th>
+                                                       <th>Join On</th>
+                                                       <th>Account Type</th>
+                                                       <th>Industry</th>
+                                                       <th>Status</th>
+                                                   </tr>
+                                               </thead>
+                                               <tbody id="all-advertisement-user">
+                                               </tbody>
+                                           </table>
+                                       </div>
+                                       <div class="pagination">
+                                           <button id="previous-btn6" class="btn btn-primary">Previous</button>
+                                           &nbsp;
+                                           <button id="next-btn6" class="btn btn-primary">Next</button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+               <!-- End Advertisement User -->
+
+                <!-- Pending Verfication -->
+                <div class="tab-pane fade show" id="pv" role="tabpanel"
+                    aria-labelledby="pv-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input-verification"  placeholder="Search...">
+                                            <button id="search-btn-verification" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Join On</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-verification-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn-verification" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn-verification" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Pending Verfication -->
+
+                <!-- Pending Verfication -->
+                <div class="tab-pane fade show" id="pns" role="tabpanel"
+                    aria-labelledby="pns-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input-nbverification"  placeholder="Search...">
+                                            <button id="search-btn-nbverification" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <!-- <th>Name</th> -->
+                                                        <th>Email</th>
+                                                        <th>Join On</th>
+                                                        <th>Area List</th>
+                                                        <th>Document1</th>
+                                                        <th>Document2</th>
+                                                        <th>Document3</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-nb-list">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn-nbverification" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn-nbverification" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Pending Verfication -->
+            </div>
+
+            <div class="tab-content px-3" id="myTabContent1" data-target="myProfileTab1">
+                <!-- affiliate discount -->
+                <div class="tab-pane fade show" id="affiliate" role="tabpanel"
+                aria-labelledby="affiliate-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input8"  placeholder="Search...">
+                                            <button id="search-btn8" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-inactive-user">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn7" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn7" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- affiliate discount -->
+
+                <!-- promo totals -->
+                <div class="tab-pane fade show" id="promo" role="tabpanel"
+                aria-labelledby="promo-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input8"  placeholder="Search...">
+                                            <button id="search-btn8" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-inactive-user">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn7" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn7" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- promo totals -->
+
+                <!-- Inactive User -->
+                <div class="tab-pane fade show" id="inactive" role="tabpanel"
+                aria-labelledby="inactive-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input8"  placeholder="Search...">
+                                            <button id="search-btn8" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-inactive-user">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn7" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn7" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Inactive User -->
+            </div>
+            
+            <!--  bookmarks tab START -->
+            <div class="tab-content px-3" id="myTabContent2" data-target="myProfileTab2">
+                 <!-- Boostmarketing User -->
+                 <div class="tab-pane fade show" id="boostmarketing" role="tabpanel"
+                 aria-labelledby="boostmarketing-tab">
+                    <div class="tab-pane-content mt-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="ec-vendor-list card card-default card-border">
+                                    <div class="card-body">
+                                        <div class="sidebtn">
+                                            <div class="all-user-serach input-group">
+                                                <input type="text" id="search-input-boostmarketing"  placeholder="Search...">
+                                                <button id="search-btn-boostmarketing" role="button"><i class="mdi mdi-magnify"></i></button>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddBoostMarketingAdmin">Add Boost-Marketing Admin</button>
+                                            <!-- Add Boostmarketing Admin -->
+                                            <div class="modal fade modal-add-contact" id="AddBoostMarketingAdmin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 50%;" role="document">
+                                                    <div class="modal-content">
+                                                        <form action="{% url 'AdminAddBoostMarketingUser' %}" method="post" enctype="multipart/form-data">
+                                                            {% csrf_token %}
+                                                            <div class="modal-header px-4">
+                                                                <h5 class="modal-title" id="exampleModalCenterTitle">Add New Property listing Type</h5>
+                                                            </div>
+                                                            <div class="modal-body px-4">
+                                                                <div class="ec-vendor-upload-detail">
+                                                                    <div class="row">
+                                                                        <div class="col mb-3">
+                                                                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                                                            <img src="{% static 'assets/img/products/vender-upload-preview.jpg' %}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar"/>
+                                                                            <div class="button-wrapper ml-3">
+                                                                            <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
+                                                                                <span class="d-none d-sm-block">Upload new photo</span>
+                                                                                <i class="bx bx-upload d-block d-sm-none"></i>
+                                                                                <input type="file" id="upload" name ="profile" class="account-file-input" hidden accept="image/png, image/jpeg" required/>
+                                                                            </label>
+                                                                            <button type="button" class="btn btn-outline-secondary account-image-reset mb-4">
+                                                                                <i class="bx bx-reset d-block d-sm-none"></i>
+                                                                                <span class="d-none d-sm-block">Reset</span>
+                                                                            </button>
+                                                                            <!-- <p class="text-muted mb-0">Allowed JPG, GIF or PNG. Max size of 800K</p> -->
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <label for="inputEmail4" class="form-label" >First Name</label>
+                                                                            <input type="text" class="form-control slug-title" name="first_name"required id="inputEmail4">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="inputEmail4" class="form-label">Last Name</label>
+                                                                            <input type="text" class="form-control slug-title" name="last_name"required id="inputEmail4">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <label for="inputEmail4" class="form-label">Email</label>
+                                                                            <input type="email" class="form-control slug-title" name="email" requiredid="inputEmail4">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="inputEmail4" class="form-label">Password</label>
+                                                                            <input type="password" class="form-control slug-title" name="password" requiredid="inputEmail4">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <label for="inputEmail4" class="form-label">Work Number</label>
+                                                                            <input type="text" class="form-control slug-title" name="work_number" required id="inputEmail4">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label class="form-label" name="short_description">Sort Description</label>
+                                                                            <textarea class="form-control" rows="2" required></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class=" mb-25">
+                                                                        <label class="form-label">Select Services</label>
+                                                                        <div class="form-checkbox-box">
+                    
+                                                                            {% if 1 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="1">
+                                                                                <label>SMS Marketing</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="1">
+                                                                                <label>SMS Marketing</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 2 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="2">
+                                                                                <label>Display Ads</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="2">
+                                                                                <label>Display Ads</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 3 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="3">
+                                                                                <label>Native Ads</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="3">
+                                                                                <label>Native Ads</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 4 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="4">
+                                                                                <label>Streaming Ads</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="4">
+                                                                                <label>Streaming Ads</label>
+                                                                            </div>
+                                                                            {% endif %}
+    
+                                                                            {% if 5 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="5">
+                                                                                <label>Social Media</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="5">
+                                                                                <label>Social Media</label>
+                                                                            </div>
+                                                                            {% endif %}
+                                                                            
+                                                                            {% if 6 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="6">
+                                                                                <label>Podcast Ads</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="6">
+                                                                                <label>Podcast Ads</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 7 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="7">
+                                                                                <label>Commercial Ad</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="7">
+                                                                                <label>Commercial Ad</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 8 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="8">
+                                                                                <label>Remarketing</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="8">
+                                                                                <label>Remarketing</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 9 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="9">
+                                                                                <label>Digital Billboard</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="9">
+                                                                                <label>Digital Billboard</label>
+                                                                            </div>
+                                                                            {% endif %}
+                                                                            
+                                                                            {% if 10 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="10">
+                                                                                <label>Paid Media Google Adward</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="10">
+                                                                                <label>Paid Media Google Adward</label>
+                                                                            </div>
+                                                                            {% endif %}
+                    
+                                                                            {% if 11 in boostmarketingobj %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox" disabled  name="select_service" value="111">
+                                                                                <label>Other Digital Marketing Services</label>
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="checkbox"  name="select_service" value="11">
+                                                                                <label>Other Digital Marketing Services</label>
+                                                                            </div>
+                                                                            {% endif %}
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer px-4">
+                                                                <button type="button" class="btn btn-secondary btn-pill" data-bs-dismiss="modal">Cancel</button>
+                                                                <button  class="btn btn-primary btn-pill" type="submit">Send Email</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- End Boostmarketing Admin -->
+                                        </div>
+                                        <!-- <button type="button" class="ml-3 btn btn-primary" data-bs-toggle="" data-bs-target="">Add Property Listing</button> -->
+                                        <div class="table-responsive">
+                                            <table id="responsive-data-table" class="table">
+                                                <thead class="headcolor">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Join On</th>
+                                                        <th>Account Type</th>
+                                                        <th>License Type</th>
+                                                        <th>License Number</th>
+                                                        <th>Company Name</th>
+                                                        <th>Total Members</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="all-boostmarketing-user">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <button id="previous-btn-boostmarketing" class="btn btn-primary">Previous</button>
+                                            &nbsp;
+                                            <button id="next-btn-boostmarketing" class="btn btn-primary">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Boostmarketing User -->
+            </div>
+            <!--  bookmarks tab END -->
+
+        </div>
+        <!-- end list -->
+    </div>
+    <!-- End Content -->
+</div>
+<!-- End Content Wrapper -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- All Type User User Data -->
+<script>
+    $(document).ready(function() {
+        $('.nav-link').click(function(e) {
+            e.preventDefault();
+            var tabId = $(this).attr('data-bs-target');
+
+            if (tabId === '#guest'){
+                GuestData();
+            }
+            else if (tabId === '#agent'){
+                AgentData();
+            }
+            else if (tabId === '#investor'){
+                InvestorData();
+            }
+            else if (tabId === '#manager'){
+                ManagerData();
+            }
+            else if (tabId === '#fsbho'){
+                FSBHOData();
+            }
+            else if (tabId === '#advertising'){
+                AdvertisementData();
+            }
+            else if (tabId === '#affiliate'){
+                // AffilateMarketingData();
+                console.log("AfilateMarketingData")
+            }
+            else if (tabId === '#promo'){
+                console.log("Promo")
+            }
+            else if (tabId === '#inactive'){
+                InactiveUserData();
+            }
+            else if (tabId === '#boostmarketing'){
+                BoostMarketingAdminsData();
+            }
+            else if (tabId === '#pv'){
+                PendingVerficationData();
+            }
+            else if (tabId === '#pns'){
+                PendingNbData();
+            }
+        })
+
+        function GuestData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_GuestUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-guest-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+                            
+                            // row.append('<td><a href="/ProfileInDetails/' + item.id + '"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+
+
+                            dataList.append(row);
+                        });
+                        $('#previous-btn1').prop('disabled', !data.has_previous);
+                        $('#next-btn1').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn1').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn1').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn2').click(function() {
+                var searchQuery = $('#search-input2').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function AgentData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_AgentUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-agent-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+                            dataList.append(row);
+                        });
+                        $('#previous-btn2').prop('disabled', !data.has_previous);
+                        $('#next-btn2').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn2').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn2').click(function() {
+                page += 1;
+                loadData();
+            });
+            
+            // Handle search button click
+            $('#search-btn3').click(function() {
+                var searchQuery = $('#search-input3').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+        
+        function InvestorData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_InvestorUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-investor-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+            
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+                            dataList.append(row);
+                        });
+                        $('#previous-btn3').prop('disabled', !data.has_previous);
+                        $('#next-btn3').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn3').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+            
+            // Handle next page button click
+            $('#next-btn3').click(function() {
+                page += 1;
+                loadData();
+            });
+            
+            // Handle search button click
+            $('#search-btn4').click(function() {
+                var searchQuery = $('#search-input4').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function ManagerData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_ManagementUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-manager-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+                            dataList.append(row);
+                        });
+                        $('#previous-btn4').prop('disabled', !data.has_previous);
+                        $('#next-btn4').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn4').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn4').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn5').click(function() {
+                var searchQuery = $('#search-input5').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function FSBHOData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_FsbhoUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-fsbho-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+                            dataList.append(row);
+                        });
+                        $('#previous-btn5').prop('disabled', !data.has_previous);
+                        $('#next-btn5').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn5').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn5').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn6').click(function() {
+                var searchQuery = $('#search-input6').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function AdvertisementData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_AdvertisementUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-advertisement-user');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.Business_Name + '</td>'); //name
+                            row.append('<td>' + item.Business_Email + '</td>'); // email
+                            row.append('<td>' + item.Business_Phone + '</td>'); // phone
+                            row.append('<td>' + new Date(item.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            row.append('<td><span class="mb-2 mr-2 badge badge-warning">Advertisement User</span></td>');
+                            row.append('<td>' + item.Industry + '</td>'); // phone
+
+                            if(item.is_active){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                            } 
+                            else {
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                            }
+                            // row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            dataList.append(row);
+                        });
+                        $('#previous-btn6').prop('disabled', !data.has_previous);
+                        $('#next-btn6').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn6').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn6').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn7').click(function() {
+                var searchQuery = $('#search-input7').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function PendingVerficationData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_AgentLic/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-verification-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td>' + item.Full_name + '</td>');
+                            if(item.user){
+                                row.append('<td>' + item.user.username + '</td>');
+                                row.append('<td>' + new Date(item.user.date_joined).toLocaleDateString('en-US') + '</td>');
+                            } else {
+                                row.append('<td>' + "-" + '</td>');
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            if(item.lic_Type){
+                                row.append('<td>' + item.lic_Type + '</td>');
+                            } else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            if(item.license_number){
+                                row.append('<td>' + item.license_number + '</td>');
+                            } else {
+                                row.append('<td>' + item.license_number + '</td>');
+                            }
+
+                            if(item.is_validated){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Approved</span></td>');
+                            } 
+                            else{
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Pending</span></td>');
+                            }
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/AdminApprovedAgentLic/'+ item.id + '">Approve</a></li><li><a class="dropdown-item" href="/AdminRejectAgentLic/'+ item.id +'">Reject</a></li></ul></div></td>');
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-verification').prop('disabled', !data.has_previous);
+                        $('#next-btn-verification').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-verification').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-verification').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-verification').click(function() {
+                var searchQuery = $('#search-input-nbverification').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function PendingNbData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_Neighborhood/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-nb-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            // row.append('<td>' + item.user.first_name + " " + item.user.last_name + '</td>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user.id+'">' + item.user.username + '</a></td>');
+                            // row.append('<td>' + item.user.username + '</td>');
+                            row.append('<td>' + new Date(item.user.date_joined).toLocaleDateString('en-US') + '</td>');
+                            row.append('<td>' + item.area_id + '</td>');
+                            if(item.doc1){
+                                row.append('<td><a href="'+item.doc1+'"target="_blank">Documents 1,</a></td>');
+                            }
+                            else{
+                                row.append('<td>'+"-"+'</td>');
+                            }
+                            if(item.doc2){
+                                row.append('<td><a href="'+item.doc2+'"target="_blank">Documents 2,</a></td>');
+                            }
+                            else{
+                                row.append('<td>'+"-"+'</td>');
+                            }
+                            if(item.doc3){
+                                row.append('<td><a href="'+item.doc3+'"target="_blank">Documents 3,</a></td>');
+                            }
+                            else{
+                                row.append('<td>'+"-"+'</td>');
+                            }
+
+                            if(item.is_verified == "Pending"){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Pending</span></td>');
+                            } 
+                            else if (item.is_verified == "Reject"){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Reject</span></td>');
+                            }
+                            else{
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Approve</span></td>');
+                            }
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/AdminApprovedAgentNbSpeciality/'+ item.id +'">Approve</a></li><li><a class="dropdown-item" href="/AdminRejectedAgentNbSpeciality/'+ item.id +'">Reject</a></li><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user.id +'">View Profile</a></li></ul></div></td>');
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-nbverification').prop('disabled', !data.has_previous);
+                        $('#next-btn-nbverification').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-nbverification').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-nbverification').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-nbverification').click(function() {
+                var searchQuery = $('#search-input-nbverification').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+        
+        function InactiveUserData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_InactiveUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-inactive-user');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+                            dataList.append(row);
+                        });
+                        $('#previous-btn7').prop('disabled', !data.has_previous);
+                        $('#next-btn7').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn7').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn7').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn8').click(function() {
+                var searchQuery = $('#search-input8').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function BoostMarketingAdminsData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/Api_BoostMarketingUser/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-boostmarketing-user');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                            // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                            row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                            row.append('<td>' + item.cell_number + '</td>'); // phone
+                            row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                            if(item.user_type.user_type == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            } 
+                            else if(item.user_type.user_type == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.user_type.user_type == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.user_type.user_type == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.user_type.user_type == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.user_type.user_type == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.user_type.user_type == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            if(item.agent_broker_license_title != null){
+                                row.append('<td>' + item.agent_broker_license_title + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.sales_persones_license != null){
+                                row.append('<td>' + item.sales_persones_license + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+                            if(item.name_of_business_listing != null){
+                                row.append('<td>' + item.name_of_business_listing + '</td>');
+                            } 
+                            else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + '-' + '</td>');
+                            if(item.user_type.user.is_suspended){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                            } 
+                            else {
+                                if(item.user_type.user.is_active){
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                                } 
+                                else {
+                                    row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                                }
+                            }
+
+                            if (item.user_type.user.is_active){
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            } else {
+                                row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                            }
+
+                            // row.append('<td><a href="/ProfileInDetails/' + item.id + '"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-boostmarketing').prop('disabled', !data.has_previous);
+                        $('#next-btn-boostmarketing').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-boostmarketing').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-boostmarketing').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-boostmarketing').click(function() {
+                var searchQuery = $('#search-input-boostmarketing').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+    })
+</script>
+<!-- End All Type User User Data -->
+
+<!-- All User Data -->
+<script>
+    $(document).ready(function(){
+        var page = 1;
+        loadData();
+        function loadData(searchQuery = ''){
+            $.ajax({
+                url: '/Api_AllUser/',
+                type: 'GET',
+                data: {
+                    page: page,
+                    search: searchQuery,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var dataList = $('#all-user-list');
+                    dataList.empty();
+                    $.each(data.results, function(index, item){
+                        var row = $('<tr>');
+                        row.append('<td><a class="text-decoration-none text-dark" href="/ProfileInDetails/'+item.user_type.user.id+'">' + item.first_name + " " + item.last_name + '</a></td>'); //name
+                        // row.append('<td>' + item.first_name + " " + item.last_name + '</td>'); //name
+                        row.append('<td>' + item.user_type.user.email + '</td>'); // email
+                        row.append('<td>' + item.cell_number + '</td>'); // phone
+                        row.append('<td>' + new Date(item.user_type.user.date_joined).toLocaleDateString('en-US') + '</td>'); // join on
+                        if(item.user_type.user_type == 0){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                        } 
+                        else if(item.user_type.user_type == 1){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                        }
+                        else if(item.user_type.user_type == 2){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                        }
+                        else if(item.user_type.user_type == 3){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                        }
+                        else if(item.user_type.user_type == 4){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                        }
+                        else if(item.user_type.user_type == 5){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                        }
+                        else if(item.user_type.user_type == 6){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                        }
+                        else if(item.user_type.user_type == 7){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                        }
+                        if(item.agent_broker_license_title != null){
+                            row.append('<td>' + item.agent_broker_license_title + '</td>');
+                        } 
+                        else {
+                            row.append('<td>' + "-" + '</td>');
+                        }
+                        if(item.sales_persones_license != null){
+                            row.append('<td>' + item.sales_persones_license + '</td>');
+                        } 
+                        else {
+                            row.append('<td>' + "-" + '</td>');
+                        }
+                        if(item.name_of_business_listing != null){
+                            row.append('<td>' + item.name_of_business_listing + '</td>');
+                        } 
+                        else {
+                            row.append('<td>' + "-" + '</td>');
+                        }
+
+                        row.append('<td>' + '-' + '</td>');
+                        if(item.user_type.user.is_suspended){
+                            row.append('<td><span class="mb-2 mr-2 badge badge-danger">Suspended</span></td>');
+                        } 
+                        else {
+                            if(item.user_type.user.is_active){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Active</span></td>');
+                            } 
+                            else {
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Blocked</span></td>');
+                            }
+                        }
+                        if (item.user_type.user.is_active){
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminBlockUser/'+ item.user_type.user.id +'">Block User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                        } else {
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="/ProfileInDetails/'+ item.user_type.user.id +'">View Profile</a></li><li><a class="dropdown-item" href="/AdminUnBlockUser/'+ item.user_type.user.id +'">Unblock User</a></li><li><a class="dropdown-item" href="/AdminSuspendUser/'+ item.user_type.user.id +'">Suspend</a></li></ul></div></td>');
+                        }
+
+                        // row.append('<td><a href="/ProfileInDetails/' + item.id + '"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                        dataList.append(row);
+                    });
+                    $('#previous-btn').prop('disabled', !data.has_previous);
+                    $('#next-btn').prop('disabled', !data.has_next);
+                }
+            });
+        }
+        // Handle previous page button click
+        $('#previous-btn').click(function() {
+            if (page > 1) {
+                page -= 1;
+                loadData();
+            }
+        });
+
+        // Handle next page button click
+        $('#next-btn').click(function() {
+            page += 1;
+            loadData();
+        });
+
+        // Handle search button click
+        $('#search-btn1').click(function() {
+            var searchQuery = $('#search-input1').val(); // Get the search query from the input field
+            page = 1; // Reset the page number to 1
+            loadData(searchQuery); // Load data with the new search query
+        });
+    });
+</script>
+<!-- End All User Data -->
+
+<script>
+    jQuery('a.nav-link').click(function(){jQuery(this).closest('.list-profile').find('.active').not(this).removeClass('active')});
+    
+    $(document).ready(function() {
+        $(".nav-link").on("click", function() {
+        $(".tab-content .tab-pane").removeClass("show active");
+        var target = $(this).data("bs-target");
+        $(target).addClass("show active");
+        });
+    });
+
+</script>
+
+{% endblock %}

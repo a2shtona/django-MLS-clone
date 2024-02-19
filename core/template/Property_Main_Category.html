@@ -1,0 +1,166 @@
+{% extends "base.html"%}{% load static %} {% block content %}
+<style>
+	.ec-vendor-list .vendor-thumb {
+		width: 70px;
+		height: 60px;
+		border-radius: 15px;
+	}
+</style>
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-contacts">
+						<div>
+							<h1>Property Main Category</h1>
+							<p class="breadcrumbs"><span><a href="{% url 'dashboard' %}">Home</a></span>
+								<span><i class="mdi mdi-chevron-right"></i></span>
+							</p>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#addUser"> Add New
+							</button>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="ec-vendor-list card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="responsive-data-table" class="table">
+											<thead>
+												<tr>
+													<th>Type of Listing</th>
+													<th>Listing Type</th>
+													<th>Main Category</th>
+													<th>Position</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												{% for item in propertymaincategoryobj %}
+												<tr>
+													
+													<td>{{item.listing_type.type_of_listing.property_listing_name}}</td>
+													<td>{{item.listing_type.listing_type}}</td>
+													<td>{{item.Main_category}}</td>
+													<td>{{item.category_position}}</td>
+													{% if item.is_active %}
+													<td>Active</td>
+													{% else %}
+													<td>Deactivate</td>
+													{% endif %}
+													
+													<td>
+														<div class="btn-group mb-1">
+															<form>
+																<a style="color:rgb(73, 73, 73)" href="{% url 'editpropertymaincategory' item.id %}" type="button" class="btn btn-outline-success">Edit</a>
+														</form>
+														<div class="pl-3"></div>
+														<form action="{% url 'propertymaincategory' item.id %}" method="POST">
+															{% csrf_token %}
+																<input type="submit" class="btn btn-outline-danger" name="action" style="color:rgb(73, 73, 73)" value="Delete"  onclick="return confirm('Do you Want To Delete Permanently?')">
+															</form>
+														</div>
+													</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+
+										<!-- start paginator -->
+										<nav aria-label="Page navigation example">
+											<ul class="pagination justify-content-center">
+
+												{% if propertymaincategoryobj.has_previous %}
+											  <li class="page-item ">
+												<a class="page-link" href="?page={{propertymaincategoryobj.previous_page_number}}" tabindex="-1" aria-disabled="true" >Previous</a>
+											  </li>
+											  {% endif %}
+
+											  {% for i in obj %}
+											  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+											  {% endfor %}
+
+											  {% if propertymaincategoryobj.has_next %}
+											  <li class="page-item">
+												<a class="page-link" href="?page={{propertymaincategoryobj.next_page_number}}">Next</a>
+											  </li>
+											  {% endif %}
+
+											</ul>
+										</nav>
+										<!-- end paginator -->
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Add User Modal  -->
+					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+							<div class="modal-content">
+								<form action="{% url 'propertymaincategory'%}" method="post">
+									{% csrf_token %}
+									<div class="modal-header px-4">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Add New Main Category</h5>
+									</div>
+
+									<div class="modal-body px-4">
+										
+
+										<div class="row mb-2">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="firstName">Type Of Listing</label>
+													<select class="form-select form-control" name="maincategoryid" aria-label="Default select example" required>
+														{% for item in propertylistingtypeobj %}
+															<option value="{{item.id}}">{{item.type_of_listing.property_listing_name}} {{item.listing_type}}</option>
+														{% endfor %}
+													  </select>
+												</div>
+											</div>
+											
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="listing_type">Main category Name</label>
+													<input type="text" class="form-control" id="listing_type" placeholder="Main Category Name" name="main" placeholdername="main_category_name" required>
+												</div>
+											</div>
+
+											<div class="col-lg-6">
+												<div class="form-group mb-4">
+													<label for="listing-Position">Listing Position</label>
+													<input type="number" class="form-control" id="listing-Position" name="listingposition" required>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer px-4">
+										<button type="button" class="btn btn-secondary btn-pill"
+											data-bs-dismiss="modal">Cancel</button>
+										<button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+		</div> <!-- End Content -->
+	</div> <!-- End Content Wrapper -->
+
+<!--start for page reload  -->
+<script>
+	window.history.replaceState({}, document.title, "/" + "propertymaincategory");
+</script>
+<!--end for page reload  -->
+	
+{% endblock %}
+
+

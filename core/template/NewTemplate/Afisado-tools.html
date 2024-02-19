@@ -1,0 +1,1332 @@
+{% extends "NewTemplate/base2.html"%}
+{% load static %}
+{% block content %}
+<style>
+    .numbered{
+        text-align: end;
+        color: black;
+        font-weight: 500;
+        font-size: 20px;
+    }
+    .card-color{
+        background-color: #88aaf3;
+        color: #282727;
+        border-radius: 6px;
+    }
+    .card-border{
+        border: none;
+    }
+    .vertical-line{
+        padding-right: 8px;
+        border-right: black solid 1px;
+        padding-bottom: 1px;
+        height: 30px;
+        margin-right: 0.5rem !important;
+    }
+    .right{
+        padding-bottom: 5px !important;
+    }
+    .headcolor{
+        background-color: #88aaf3;
+    }
+    .list-user{
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0px;
+    }
+    .card-mini{
+        gap: 20px;
+    }
+    .card-mini > li{
+        flex: 1;
+    }
+    .card-mini > li a{
+        padding: 1.63rem !important;
+        width: 100%;
+        font-size: 1.25125rem;
+        color: #000 !important;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link, .headcolor{
+        background-color: #88aaf3;
+        color: #000 !important;
+    }
+    .sidebtn{
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        margin: 3px;
+        gap: 10px;
+    }
+    .all-user-serach{
+        display: flex;
+        align-items: end;
+        justify-content: end;
+        margin-bottom: 0;
+    }
+
+    .all-user-serach input{
+        font-size: 17px;
+        width: 18%;
+        border-radius: 5px;
+        border: 1px solid;
+        padding-inline: 8px;
+    }
+
+    .all-user-serach button{
+        border: 1px solid;
+        font-size: 17px;
+        padding-inline: 7px;
+        border-radius: 0px 5px 5px 0px;
+    }
+    .sidebtn button{
+        min-width: fit-content;
+    }
+</style>
+<!-- CONTENT WRAPPER -->
+<div class="ec-content-wrapper">
+    <!-- Content -->
+    <div class="content">
+        <div class="breadcrumb-wrapper breadcrumb-contacts">
+            <div>
+                <h1>Tools</h1>
+            </div>
+        </div>
+        <!-- Top Statistics -->
+        <ul class="nav nav-tabs card-mini" id="myTab" role="tablist">
+            <li class="nav-item card-color" role="presentation">
+                <a class="nav-link main-tools-tab active" href="language-tab" data-bs-toggle="tab" data-bs-target="#language" role="tab">Language</a>
+            </li>
+            <li class="nav-item card-color" role="presentation">
+                <a class="nav-link main-tools-tab" href="agreement-tab" data-bs-toggle="tab" data-bs-target="#agreement" role="tab">Agreement</a>
+            </li>
+            <li class="nav-item card-color" role="presentation">
+                <a class="nav-link main-tools-tab" href="home-card-tab" data-bs-toggle="tab" data-bs-target="#home-card" role="tab">Home Card</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+
+            <!-- Language -->
+            <div class="tab-pane fade show active" id="language" role="tabpanel"
+                aria-labelledby="language-tab">
+                <div class="tab-pane-content mt-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="ec-vendor-list card card-default card-border">
+                                <div class="card-body">
+                                    <div class="sidebtn">
+                                        <div class="all-user-serach input-group">
+                                            <input type="text" id="search-input-language"  placeholder="Search...">
+                                            <button id="search-btn-language" role="button"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#addcsv"> upload Csv
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#addUser"> Add New
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table id="responsive-data-table" class="table">
+                                            <thead class="headcolor">
+                                                <tr>
+                                                    <th>Language name</th>
+                                                    <th>Position</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="all-language-list">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="pagination">
+                                        <button id="previous-btn-language" class="btn btn-primary">Previous</button>
+                                        &nbsp;
+                                        <button id="next-btn-language" class="btn btn-primary">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade modal-add-contact" id="addcsv" tabindex="-1" role="dialog" 
+					aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <form action="{% url 'Uploadlanguage'%}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-header px-4">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Language Excel File</h5>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label for="listing_type">Upload Csv</label>
+                                                <input type="file" class="form-control" id="listing_type" placeholder="Language Excel File" name="myfile" placeholdername="language" required accept=".xlsx">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer px-4">
+                                    <button type="button" class="btn btn-secondary btn-pill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <form action="{% url 'languagemaster'%}" method="post">
+                                {% csrf_token %}
+                                <div class="modal-header px-4">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Langauge</h5>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Language Name</label>
+                                                <input type="text" class="form-control" id="listing_type" placeholder="Language Name" name="language_name" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group mb-4">
+                                                <label for="listing-Position">Position</label>
+                                                <input type="number" class="form-control" id="listing-Position" name="position" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer px-4">
+                                    <button type="button" class="btn btn-secondary btn-pill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Langage -->
+
+            <!-- Aggreement -->
+            <div class="tab-pane fade show" id="agreement" role="tabpanel" aria-labelledby="agreement-tab">
+                <div class="card bg-white profile-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-12">
+                            <div class="profile-content-right profile-right-spacing py-5 user-profile-tab-content">
+                                <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border" id="myProfileTab" role="tablist">
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <button class="nav-link active right" id="terms-tab" data-bs-toggle="tab" data-bs-target="#terms" type="button" role="tab" aria-controls="terms" aria-selected="true">Terms</button>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <button class="nav-link right" id="offers-tab" data-bs-toggle="tab" data-bs-target="#offers" type="button" role="tab" aria-controls="offers" aria-selected="true">Offers</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content px-3 px-xl-5" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="terms" role="tabpanel" aria-labelledby="terms-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input-terms"  placeholder="Search...">
+                                                                    <button id="search-btn-terms" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                    data-bs-target="#addTerms">Add Terms</button>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="table-responsive">
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Listing Type</th>
+                                                                            <th>Account Type</th>
+                                                                            <th>Sub Listing Type</th>
+                                                                            <th>Term</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="all-terms-list">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-terms" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-terms" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show" id="offers" role="tabpanel" aria-labelledby="offers-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input-offers"  placeholder="Search...">
+                                                                    <button id="search-btn-offers" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary d-block" data-bs-toggle="modal"
+                                                                    data-bs-target="#addOffer">Add Offer</button>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="table-responsive">
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Listing Type</th>
+                                                                            <th>Account Type</th>
+                                                                            <th>Sub Listing Type</th>
+                                                                            <th>Offer</th>
+                                                                            <th>Position</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="all-offers-list">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-offers" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-offers" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start Modal -->
+                <!-- Add Property Type -->
+                <div class="modal fade modal-add-contact" id="addTerms" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <form action="{% url 'AddTermsView' %}" method="post" data-city-url="{% url 'SublistingView' %}" id="indexForm">
+                                {% csrf_token %}
+                                <div class="modal-header px-4">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Terms</h5>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="firstName">Listing Type</label>
+                                                <select class="form-select form-control" name="listingmain" aria-label="Default select example" id="listingmain">
+                                                    <option value="">-- Select Type --</option>
+                                                    {% for propety_listing_type in propety_listing_type %}
+                                                    <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Account Type</label>
+                                                <select class="form-select form-control" name="account_type" aria-label="Default select example">
+                                                    <option value="2">Agent & Broker</option>
+                                                    <option value="5">Landlord & Management</option>
+                                                    <option value="3">Investor & Developer</option>
+                                                    <option value="4">FRBHO & FSBHO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Sub Listing Type</label>
+                                                <select class="form-control" name="sublistingtype" id="sublistingtype">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing-Position">Terms Position</label>
+                                                <input type="number" required class="form-control" id="listing-Position" name="position">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-4">
+                                                <label for="listing-Position">Terms</label>
+                                                <input type="text" required class="form-control" id="trems-postion" name="trems">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer px-4">
+                                    <button type="button" class="btn btn-secondary btn-pill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Property Type -->
+
+                <!-- Add Property Type -->
+                <div class="modal fade modal-add-contact" id="addOffer" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <form action="{% url 'AddOffersView' %}" method="post" data-city-url="{% url 'SublistingView' %}" id="offerForm">
+                                {% csrf_token %}
+                                <div class="modal-header px-4">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Offer</h5>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="firstName">Listing Type</label>
+                                                <select class="form-select form-control" name="listingmain" aria-label="Default select example" id="listingmainoffer">
+                                                    <option value="">-- Select Type --</option>
+                                                    {% for propety_listing_type in propety_listing_type %}
+                                                    <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Account Type</label>
+                                                <select class="form-select form-control" name="account_type" aria-label="Default select example">
+                                                    <option value="2">Agent & Broker</option>
+                                                    <option value="5">Landlord & Management</option>
+                                                    <option value="3">Investor & Developer</option>
+                                                    <option value="4">FRBHO & FSBHO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Sub Listing Type</label>
+                                                <select class="form-control" name="sublistingtype" id="sublistingtypeoffer">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing-Position">offer Position</label>
+                                                <input type="number" required class="form-control" id="listing-Position" name="position">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-4">
+                                                <label for="listing-Position">Offer</label>
+                                                <input type="text" required class="form-control" id="trems-postion" name="Offer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer px-4">
+                                    <button type="button" class="btn btn-secondary btn-pill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Property Type -->
+            </div>
+            <!-- End Aggreement -->
+
+            <!-- Home Card -->
+            <div class="tab-pane fade show" id="home-card" role="tabpanel" aria-labelledby="home-card-tab">
+                <div class="card bg-white profile-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-12">
+                            <div class="profile-content-right profile-right-spacing py-5 user-profile-tab-content">
+                                <ul class="nav nav-tabs px-3 px-xl-5 nav-style-border" id="myProfileTab" role="tablist">
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <button class="nav-link active right" id="home-card-title-tab" data-bs-toggle="tab" data-bs-target="#home-card-title" type="button" role="tab" aria-controls="home-card-title" aria-selected="true">Home Card Title</button>
+                                    </li>
+                                    <li class="nav-item vertical-line" role="presentation">
+                                        <button class="nav-link right" id="home-card-body-tab" data-bs-toggle="tab" data-bs-target="#home-card-body" type="button" role="tab" aria-controls="home-card-body" aria-selected="true">Home Card</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content px-3 px-xl-5" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home-card-title" role="tabpanel" aria-labelledby="home-card-title-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            {% if hometitleobj|length is 1 %}
+					                                        {% else %}
+                                                            <div class="sidebtn">
+                                                                <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                data-bs-target="#addcardtitile">Add Home Title</button>
+                                                            </div>
+                                                            <div class="modal fade modal-add-contact" id="addcardtitile" tabindex="-1" role="dialog"
+                                                                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                    <div class="modal-content">
+                                                                        <form action="{% url 'AdminHomeCardTitle' %}" method="post">
+                                                                            {% csrf_token %}
+                                                                            <div class="modal-header px-4">
+                                                                                <h5 class="modal-title" id="exampleModalCenterTitle">Add New Title</h5>
+                                                                            </div>
+
+                                                                            <div class="modal-body px-4">
+                                                                                
+
+                                                                                <div class="row mb-2">
+                                                                                    <!-- <div class="col-lg-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="position">Position</label>
+                                                                                            <input type="number" class="form-control" id="" placeholder=" Position" name="position" placeholdername="Position" required>
+                                                                                        </div>
+                                                                                    </div> -->
+
+                                                                                    <div class="col-lg-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="country_code">Title</label>
+                                                                                            <input type="text" class="form-control" id="" placeholder=" Title" name="Title" placeholdername="Title" required>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+                                                                                    <div class="col-lg-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="country_name">Subtitle</label>
+                                                                                            <input type="text" class="form-control" id="" placeholder="Subtitle" name="Subtitle" placeholdername="Subtitle" required>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="modal-footer px-4">
+                                                                                <button type="button" class="btn btn-secondary btn-pill"
+                                                                                    data-bs-dismiss="modal">Cancel</button>
+                                                                                <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            <!-- <div class="all-user-serach input-group">
+                                                                <input type="text" id="search-input-terms"  placeholder="Search...">
+                                                                <button id="search-btn-terms" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                            </div> -->
+                                                            <div class="table-responsive">
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Title</th>
+                                                                            <th>Sub Title</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {% for i in hometitleobj %}
+                                                                        <tr>
+                                                                            <td>{{i.Title}}</td>
+                                                                            <td>{{i.Subtitle}}</td>
+                                                                            <td>
+                                                                                <div class="dropstart">
+                                                                                    <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <img src="{% static 'svg/file.svg' %}" alt="SVG Image">
+                                                                                    </a>
+                                                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updatecardtitile" onclick="editHomeCardTitle('{{i.id}}','{{i.Title}}','{{i.Subtitle}}')">Edit</a></li>
+                                                                                        <li><a class="dropdown-item" href="{% url 'homecardtitldelete' i.id %}">Delete</a></li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        {% endfor %}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- <div class="pagination">
+                                                                <button id="previous-btn-terms" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-terms" class="btn btn-primary">Next</button>
+                                                            </div> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show" id="home-card-body" role="tabpanel" aria-labelledby="home-card-body-tab">
+                                        <div class="tab-pane-content mt-5">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="ec-vendor-list card card-default">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="all-user-serach input-group">
+                                                                    <input type="text" id="search-input-home-card"  placeholder="Search...">
+                                                                    <button id="search-btn-home-card" role="button"><i class="mdi mdi-magnify"></i></button>
+                                                                </div>
+                                                                <div class="sidebtn">
+                                                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                                                                    data-bs-target="#addhomecard">Add Home Cards</button>
+                                                                </div>
+                                                                <!--  -->
+                                                                <div class="modal fade modal-add-contact" id="addhomecard" tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                        <div class="modal-content">
+                                                                            <form action="{% url 'AdminHomeCardAdd' %}" method="post" enctype="multipart/form-data">
+                                                                                {% csrf_token %}
+                                                                                <div class="modal-header px-4">
+                                                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Card</h5>
+                                                                                </div>
+
+                                                                                <div class="modal-body px-4">
+                                                                                    
+
+                                                                                    <div class="row mb-2">
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="position">Icon</label>
+                                                                                                <input type="file" class="form-control" id="" placeholder=" Icon" name="Icon" placeholdername="Icon" required>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="CardTitle">CardTitle</label>
+                                                                                                <input type="text" class="form-control" id="" placeholder=" CardTitle" name="Card_Title" placeholdername="Card_Title" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        
+                                                                                        <div class="col-lg-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="CardBody">CardBody</label>
+                                                                                                <input type="text" class="form-control" id="" placeholder="Cardbody" name="Card_Body" placeholdername="Card_body" required>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="modal-footer px-4">
+                                                                                    <button type="button" class="btn btn-secondary btn-pill"
+                                                                                        data-bs-dismiss="modal">Cancel</button>
+                                                                                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--  -->
+                                                            </div>
+
+                                                            <div class="table-responsive">
+                                                                <table id="responsive-data-table" class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Logo</th>
+                                                                            <th>Card-Title</th>
+                                                                            <th>Card-Body</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="all-home-card-list">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="pagination">
+                                                                <button id="previous-btn-home-card" class="btn btn-primary">Previous</button>
+                                                                &nbsp;
+                                                                <button id="next-btn-home-card" class="btn btn-primary">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start Modal -->
+                <!-- Add Property Type -->
+                <div class="modal fade modal-add-contact" id="addTerms" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <form action="{% url 'AddTermsView' %}" method="post" data-city-url="{% url 'SublistingView' %}" id="indexForm">
+                                {% csrf_token %}
+                                <div class="modal-header px-4">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Type Of Listing</h5>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="firstName">Listing Type</label>
+                                                <select class="form-select form-control" name="listingmain" aria-label="Default select example" id="listingmain">
+                                                    <option value="">-- Select Type --</option>
+                                                    {% for propety_listing_type in propety_listing_type %}
+                                                    <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Account Type</label>
+                                                <select class="form-select form-control" name="account_type" aria-label="Default select example">
+                                                    <option value="2">Agent & Broker</option>
+                                                    <option value="5">Landlord & Management</option>
+                                                    <option value="3">Investor & Developer</option>
+                                                    <option value="4">FRBHO & FSBHO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Sub Listing Type</label>
+                                                <select class="form-control" name="sublistingtype" id="sublistingtype">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing-Position">Terms Position</label>
+                                                <input type="number" required class="form-control" id="listing-Position" name="position">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-4">
+                                                <label for="listing-Position">Terms</label>
+                                                <input type="text" required class="form-control" id="trems-postion" name="trems">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer px-4">
+                                    <button type="button" class="btn btn-secondary btn-pill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Property Type -->
+
+                <!-- Add Property Type -->
+                <div class="modal fade modal-add-contact" id="addOffer" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <form action="{% url 'AddOffersView' %}" method="post" data-city-url="{% url 'SublistingView' %}" id="offerForm">
+                                {% csrf_token %}
+                                <div class="modal-header px-4">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Type Of Listing</h5>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="firstName">Listing Type</label>
+                                                <select class="form-select form-control" name="listingmain" aria-label="Default select example" id="listingmainoffer">
+                                                    <option value="">-- Select Type --</option>
+                                                    {% for propety_listing_type in propety_listing_type %}
+                                                    <option value="{{propety_listing_type.id}}">{{propety_listing_type.property_listing_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Account Type</label>
+                                                <select class="form-select form-control" name="account_type" aria-label="Default select example">
+                                                    <option value="2">Agent & Broker</option>
+                                                    <option value="5">Landlord & Management</option>
+                                                    <option value="3">Investor & Developer</option>
+                                                    <option value="4">FRBHO & FSBHO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing_type">Sub Listing Type</label>
+                                                <select class="form-control" name="sublistingtype" id="sublistingtypeoffer">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="listing-Position">offer Position</label>
+                                                <input type="number" required class="form-control" id="listing-Position" name="position">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-4">
+                                                <label for="listing-Position">Offer</label>
+                                                <input type="text" required class="form-control" id="trems-postion" name="Offer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer px-4">
+                                    <button type="button" class="btn btn-secondary btn-pill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-pill">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Property Type -->
+            </div>
+            <!-- Home Card -->
+        </div>
+    </div>
+</div>
+
+<!-- Edit Model -->
+<!-- Language Edit Model -->
+<div class="modal fade modal-add-contact" id="updatelangaugedata" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="#" method="post" id="update-language">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Langauge</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="language-name">Language Name</label>
+                                <input type="text" class="form-control" id="language-name" placeholder="Language Name" name="language_name" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group mb-4">
+                                <label for="language-Position">Position</label>
+                                <input type="number" class="form-control" id="language-Position" name="position" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                    data-bs-dismiss="modal">Cancel</button>
+                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- end Language Edit Model -->
+
+<!-- Home Card Title Edit -->
+<div class="modal fade modal-add-contact" id="updatecardtitile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post" id="update-home-card-title">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Title</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="country_code">Title</label>
+                                <input type="text" class="form-control" id="home-title" placeholder=" Title" name="Title" placeholdername="Title" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="country_name">Subtitle</label>
+                                <input type="text" class="form-control" id="home-sub-title" placeholder="Subtitle" name="Subtitle" placeholdername="Subtitle" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Home Card Title Edit -->
+
+<!-- Home Card Edit -->
+<div class="modal fade modal-add-contact" id="updatehomecard" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post" id="update-home-card" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header px-4">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add New Title</h5>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="country_code">Title</label>
+                                <input type="text" class="form-control" id="home-card-title-id" placeholder=" Title" name="Title" placeholdername="Title" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="country_name">Subtitle</label>
+                                <input type="text" class="form-control" id="home-card-sub-title" placeholder="Subtitle" name="Subtitle" placeholdername="Subtitle" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="position">Icon</label>
+                                <div>
+                                    <img src="" id="home-card-image" alt="icon_alt" style="height:70px; width:70px" srcset="">
+                                </div>
+                                <input type="file" class="form-control" id="" placeholder=" Icon" name="Icon" placeholdername="Icon">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer px-4">
+                    <button type="button" class="btn btn-secondary btn-pill"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button  class="btn btn-primary btn-pill" id="idOfButton" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Home Card Edit -->
+<!-- End Edit Model -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("#listingmain").change(function () {
+        var url = $("#indexForm").attr("data-city-url");
+
+        var listingmainid = $(this).val();
+
+        $.ajax({
+            url : url,
+            data:{
+                'listingmain':listingmainid
+            },
+            success : function (data) {
+                $("#sublistingtype").html(data);
+            }
+        });
+    });
+</script>
+
+<script>
+    $("#listingmainoffer").change(function () {
+        var url = $("#offerForm").attr("data-city-url");
+
+        var listingmainid = $(this).val();
+
+        $.ajax({
+            url : url,
+            data:{
+                'listingmain':listingmainid
+            },
+            success : function (data) {
+                $("#sublistingtypeoffer").html(data);
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.main-tools-tab').click(function(e){
+            e.preventDefault();
+            var toolsId = $(this).attr('data-bs-target');
+            if (toolsId === '#agreement'){
+                TermsData();
+                OfferData();
+            }
+            else if (toolsId === '#home-card'){
+                HomeCardData();
+            }
+        })
+
+        function TermsData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_TermsList/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-terms-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            if(item.property_listing_type){
+                                row.append('<td>' + item.property_listing_type.property_listing_name + '</td>');
+                            } else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            if(item.usertypeobj == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            }
+                            else if(item.usertypeobj == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.usertypeobj == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.usertypeobj == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.usertypeobj == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.usertypeobj == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.usertypeobj == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.usertypeobj == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            else{
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            if(item.propertylisting_type){
+                                row.append('<td>' + item.propertylisting_type.listing_type + '</td>');
+                            } else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + item.terms + '</td>');
+                            row.append('<td>' + item.position + '</td>');
+                            
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#">Edit</a></li><li><a class="dropdown-item" href="/DeleteTerms/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-terms').prop('disabled', !data.has_previous);
+                        $('#next-btn-terms').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-terms').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-terms').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-terms').click(function() {
+                var searchQuery = $('#search-input-terms').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function OfferData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_OfferList/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-offers-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            if(item.property_listing_type){
+                                row.append('<td>' + item.property_listing_type.property_listing_name + '</td>');
+                            } else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            if(item.usertypeobj == 0){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Admin</span></td>');
+                            }
+                            else if(item.usertypeobj == 1){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-primary">Guest</span></td>');
+                            }
+                            else if(item.usertypeobj == 2){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-success">Agent</span></td>');
+                            }
+                            else if(item.usertypeobj == 3){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">Investor/Developers</span></td>');
+                            }
+                            else if(item.usertypeobj == 4){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-info">FSBHO</span></td>');
+                            }
+                            else if(item.usertypeobj == 5){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Management</span></td>');
+                            }
+                            else if(item.usertypeobj == 6){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Sub-Agent</span></td>');
+                            }
+                            else if(item.usertypeobj == 7){
+                                row.append('<td><span class="mb-2 mr-2 badge badge-warning">Boost-Marketing Admin</span></td>');
+                            }
+                            else{
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            if(item.propertylisting_type){
+                                row.append('<td>' + item.propertylisting_type.listing_type + '</td>');
+                            } else {
+                                row.append('<td>' + "-" + '</td>');
+                            }
+
+                            row.append('<td>' + item.offer + '</td>');
+                            row.append('<td>' + item.position + '</td>');
+                            
+                            //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');
+                            row.append(
+                                '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#">Edit</a></li><li><a class="dropdown-item" href="/DeleteOffer/'+ item.id +'">Delete</a></li></ul></div></td>'
+                                );
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-offers').prop('disabled', !data.has_previous);
+                        $('#next-btn-offers').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-offers').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-offers').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-offers').click(function() {
+                var searchQuery = $('#search-input-offers').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+
+        function HomeCardData(){
+            var page = 1;
+            loadData();
+            function loadData(searchQuery = ''){
+                $.ajax({
+                    url: '/API_HomeCardList/',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: searchQuery,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var dataList = $('#all-home-card-list');
+                        dataList.empty();
+                        $.each(data.results, function(index, item){
+                            var row = $('<tr>');
+                            row.append('<td><img src="'+ item.Icon +'" alt="SVG Image" style="height:70px; width:70px"></td>');
+                            row.append('<td>' + item.Card_Title + '</td>');
+                            row.append('<td>' + item.Card_body + '</td>');
+                            row.append('<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updatehomecard" onclick="editHomeCardData(\''+ item.id +'\',\''+ item.Icon + '\',\''+ item.Card_Title +'\',\''+ item.Card_body +'\')" >Edit</a></li><li><a class="dropdown-item" href="/homecarddelete/'+ item.id +'">Delete</a></li></ul></div></td>');
+                            dataList.append(row);
+                        });
+                        $('#previous-btn-home-card').prop('disabled', !data.has_previous);
+                        $('#next-btn-home-card').prop('disabled', !data.has_next);
+                    }
+                });
+            }
+            // Handle previous page button click
+            $('#previous-btn-home-card').click(function() {
+                if (page > 1) {
+                    page -= 1;
+                    loadData();
+                }
+            });
+
+            // Handle next page button click
+            $('#next-btn-home-card').click(function() {
+                page += 1;
+                loadData();
+            });
+
+            // Handle search button click
+            $('#search-btn-home-card').click(function() {
+                var searchQuery = $('#search-input-home-card').val(); // Get the search query from the input field
+                page = 1; // Reset the page number to 1
+                loadData(searchQuery); // Load data with the new search query
+            });
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        var page = 1;
+        loadData();
+        function loadData(searchQuery = ''){
+            $.ajax({
+                url: '/API_LanguageList/',
+                type: 'GET',
+                data: {
+                    page: page,
+                    search: searchQuery,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var dataList = $('#all-language-list');
+                    dataList.empty();
+                    $.each(data.results, function(index, item){
+                        var row = $('<tr>');
+                        row.append('<td>' + item.languages_name + '</td>'); //name
+                        row.append('<td>' + item.position + '</td>'); // phone
+                        //row.append('<td><a href="#"><img src="/static/svg/file.svg" alt="SVG Image"></a></td>');onclick = "deleteLanguage('+ item.id +')" data-bs-toggle="modal" data-bs-target="#deletelanguageid"
+                        row.append(
+                            '<td><div class="dropstart"><a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><img src="/static/svg/file.svg" alt="SVG Image"></a><ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"><li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updatelangaugedata" onclick="editLanguageData(\''+ item.id +'\',\''+ item.languages_name + '\',\''+ item.position +'\')" >Edit</a></li><li><a class="dropdown-item" href="/deletelanguage/'+ item.id +'">Delete</a></li></ul></div></td>'
+                            );
+                        dataList.append(row);
+                    });
+                    $('#previous-btn-language').prop('disabled', !data.has_previous);
+                    $('#next-btn-language').prop('disabled', !data.has_next);
+                }
+            });
+        }
+        // Handle previous page button click
+        $('#previous-btn-language').click(function() {
+            if (page > 1) {
+                page -= 1;
+                loadData();
+            }
+        });
+
+        // Handle next page button click
+        $('#next-btn-language').click(function() {
+            page += 1;
+            loadData();
+        });
+
+        // Handle search button click
+        $('#search-btn-language').click(function() {
+            var searchQuery = $('#search-input-language').val(); // Get the search query from the input field
+            page = 1; // Reset the page number to 1
+            loadData(searchQuery); // Load data with the new search query
+        });
+    });
+</script>
+
+<!-- Start Delete popup -->
+<div class="modal fade" id="deletelanguageid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Language Delete Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" id="deletelanguagepopup">
+            <div class="modal-body">
+                Are you sure you want to delete ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+<!-- End Delete popup -->
+
+<script>
+    function deleteLanguage(id){
+        document.getElementById("deletelanguagepopup").acttion = "/deletelanguage/"+id;
+    }
+</script>
+
+<script>
+    function editLanguageData(id, name, position){
+        document.getElementById("language-name").value= name;
+        document.getElementById("language-Position").value= position;
+        document.getElementById("update-language").action='/UpdateLanguageAdmin/'+id;
+    }
+
+    function editHomeCardTitle(id, title, subtitle){
+        document.getElementById("home-title").value = title;
+        document.getElementById("home-sub-title").value = subtitle;
+        document.getElementById("update-home-card-title").action = "/UpdateHomeCardTitleAdmin/"+id;
+    }
+
+    function editHomeCardData(id, icon, title, description){
+        document.getElementById("update-home-card").action = "/UpdateHomeCardAdmin/"+id;
+        document.getElementById("home-card-image").src = icon;
+        document.getElementById("home-card-title-id").value = title;
+        document.getElementById("home-card-sub-title").value = description;
+    }
+    
+</script>
+{% endblock %}

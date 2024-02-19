@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+    install:
+        on-failure: ABORT
+        commands:
+            - ./core/scripts/build/init.sh
+    pre_build:
+        on-failure: ABORT
+        commands:
+            - echo "pre build phase test"
+    build:
+        on-failure: ABORT
+        commands:
+            - echo "build project and create the environment"
+            - ./core/scripts/build/create_env.sh
+    post_build:
+        on-failure: ABORT
+        commands:
+            - echo "post build phase test"
+artifacts:
+    files:
+        - "**/*"
+    name: BuildArtifact
+    discard-paths: no
